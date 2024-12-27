@@ -32,12 +32,12 @@ export default function App ()
       </div>
 
         <Canvas shadows onPointerDown={(e) => e.target.requestPointerLock()} >
-
+<Environment background={true} preset='forest' />
           <Suspense fallback={<Loader />}>
 
             <spotLight position={[2.5, 5, 5]} angle={Math.PI / 3} penumbra={0.5} castShadow shadow-mapSize-height={2048} shadow-mapSize-width={2048} intensity={Math.PI * 50} />
             <spotLight position={[-2.5, 5, 5]} angle={Math.PI / 3} penumbra={0.5} castShadow shadow-mapSize-height={2048} shadow-mapSize-width={2048} intensity={Math.PI * 50} />
-            
+            <ambientLight intensity={1.5} />
               <Game />
             
             <Stats />
