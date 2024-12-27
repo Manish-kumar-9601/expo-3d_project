@@ -15,7 +15,7 @@ export const Game = () =>
             // }}
         >
             <Debug>
-                <Map1 />
+                <Map2 />
                 <Player position={[0, 3, 0]} />
             </Debug>
         </Physics>
