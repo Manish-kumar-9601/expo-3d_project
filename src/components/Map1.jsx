@@ -8,12 +8,12 @@ Title: Free Low Poly Forest
 */
 import React, { useEffect, useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
-import { useStore } from '../Store'
-// import map from '../assets/models/map1.glb'
+import { useStore } from '/Store'
+// import map from '/assets/models/map1.glb'
 // src\assets\models\map1.glb
 export function Map1 (props)
 {
-    const { nodes, materials } = useGLTF('../assets/models/map1.glb')
+    const { nodes, materials } = useGLTF('/assets/models/map1.glb')
     const groundRef = useRef()
     const groundObject = useStore((state) => state.groundObject)
 

@@ -14,7 +14,7 @@ import { usePlane } from '@react-three/cannon';
 
 export function Map2 (props)
 {
-    const { nodes, materials } = useGLTF('../assets/models/map2.glb')
+    const { nodes, materials } = useGLTF('/assets/models/map2.glb')
     const groundRef = useRef()
     const groundObject = useStore((state) => state.groundObject)
 
