@@ -3,7 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { Suspense, useMemo } from "react";
 import { Loader } from "./components/Loader";
 import { Physics } from "@react-three/cannon";
-import { KeyboardControls, Stats } from "@react-three/drei";
+import { Environment, KeyboardControls, Stats } from "@react-three/drei";
 import { Game } from "./components/Game";
 
 
