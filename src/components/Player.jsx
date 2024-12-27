@@ -5,7 +5,7 @@ import { Euler, Matrix4, Quaternion, Vector3 } from 'three';
 import { Vec3 } from 'cannon-es'
 import { useCompoundBody, useContactMaterial } from '@react-three/cannon';
 import { useStore } from '../Store';
-import { useKeyboardControls } from '@react-three/drei';
+// import { useKeyboardControls } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import useKeyboard from '../useKeyboard';
 
@@ -17,7 +17,7 @@ export const Player = ({ position }) =>
     const playerGround = useRef();
     const isJumpAction = useRef(false);
     const isRunningJumpAction = useRef(false);
-    const { yaw } = useFollowCam(groupRef, [0, 1, 1.2]);
+    const { yaw } = useFollowCam(groupRef, [0, 1.2, 1.2]);
     const velocity = useMemo(() => new Vector3(), []);
     const inputVelocity = useMemo(() => new Vector3(), []);
     const euler = useMemo(() => new Euler(), []);

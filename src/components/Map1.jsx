@@ -8,7 +8,7 @@ Title: Free Low Poly Forest
 */
 import React, { useEffect, useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
-import { useStore } from '/Store'
+import { useStore } from '../Store'
 // import map from '/assets/models/map1.glb'
 // src\assets\models\map1.glb
 export function Map1 (props)

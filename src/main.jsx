@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-import { KeyboardControls } from '@react-three/drei'
+// import { KeyboardControls } from '@react-three/drei'
 // const keyMap = [
 //   { name: 'forward', keys: ['ArrowUp', 'KeyW', 'w', "W"] },
 //   { name: 'back', keys: ['ArrowDown', 'KeyS'] },

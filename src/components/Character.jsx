@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from 'react'
 import {   useFBX, useGLTF } from '@react-three/drei'
 import {  LoopOnce, LoopRepeat } from 'three';
 import { useFrame } from '@react-three/fiber';
-import { useStore } from '/Store';
+import { useStore } from '../Store';
  
  
 export function Character (props)
