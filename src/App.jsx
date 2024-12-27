@@ -13,7 +13,7 @@ export default function App ()
 
   document.addEventListener('click', function ()
   {
-    var element = document.getElementById('instructions');
+    const element = document.getElementById('instructions');
     element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
     element.requestPointerLock();
   });
