@@ -37,7 +37,7 @@ export default function App ()
 
             <spotLight position={[2.5, 5, 5]} angle={Math.PI / 3} penumbra={0.5} castShadow shadow-mapSize-height={2048} shadow-mapSize-width={2048} intensity={Math.PI * 50} />
             <spotLight position={[-2.5, 5, 5]} angle={Math.PI / 3} penumbra={0.5} castShadow shadow-mapSize-height={2048} shadow-mapSize-width={2048} intensity={Math.PI * 50} />
-            <ambientLight intensity={1.5} />
+            <ambientLight intensity={.5} />
               <Game />
             
             <Stats />
