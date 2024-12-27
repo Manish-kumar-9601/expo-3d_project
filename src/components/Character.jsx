@@ -8,7 +8,7 @@ import {  LoopOnce, LoopRepeat } from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useStore } from '../Store';
  
-import idle from '/assets/animations/idle.fbx'
+ 
 export function Character (props)
 {
  
@@ -26,7 +26,7 @@ console.log( idle);
     // {
     //     actions['idle'].play();
     // })
-    const idleAnimation = useFBX(idle).animations
+    const idleAnimation = useFBX('/assets/animations/idle.fbx').animations
     idleAnimation[0].name = 'idle';
     const jumpAnimation = useFBX('/assets/animations/jumping.fbx').animations
     jumpAnimation[0].name = 'jump';
