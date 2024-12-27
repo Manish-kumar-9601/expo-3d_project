@@ -6,10 +6,8 @@ License: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
 Source: https://sketchfab.com/3d-models/free-low-poly-forest-6dc8c85121234cb59dbd53a673fa2b8f
 Title: Free Low Poly Forest
 */
-
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
-
 export function Map1 (props)
 {
     const { nodes, materials } = useGLTF('/assets/models/map1.glb')

@@ -18,9 +18,9 @@ export const Game = ({ mapCh, setMapCh }) =>
     return (
         <>
 
-            <Html>
-                <button className=' ' onClick={() => setMapCh((prev) => !prev)}>Change Map </button>
-            </Html>
+            {/* <Html className='absolute top-0' style={{position:'absolute',top:0,right:0 }} >
+                <button className='absolute top-0' onClick={() => setMapCh((prev) => !prev)}>Change Map </button>
+            </Html> */}
             {mapCh ? <Map1 /> : <Map2 />}
             <Player position={[0, 1, 0]} />
 
