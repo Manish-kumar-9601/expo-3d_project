@@ -1,6 +1,7 @@
 ﻿import { Debug, Physics } from '@react-three/cannon'
 import {Map2} from './Map2';
 import {Player} from './Player'
+import { Map1 } from './Map1';
 export const Game = () =>
 {
     return (
@@ -14,7 +15,7 @@ export const Game = () =>
             // }}
         >
             <Debug>
-                <Map2 />
+                <Map1 />
                 <Player position={[0, 3, 0]} />
             </Debug>
         </Physics>
