@@ -5,5 +5,6 @@ export const useStore=create(()=>(
     {
         actions:{},
         mixer:new AnimationMixer(),
+        groundObject:{}
     }
 ))

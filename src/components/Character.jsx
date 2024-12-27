@@ -16,7 +16,7 @@ export function Character (props)
     const { nodes, materials } = useGLTF('/assets/models/character.glb')
 
     const groupRef = useRef();
-    const { actions, mixer } = useStore();
+    const { actions, mixer } = useStore((state) => state);
     // working
     // const idleAnimation = useFBX('/assets/animations/idle.fbx');
     // console.log(idleAnimation);
@@ -63,7 +63,7 @@ export function Character (props)
     }, [actions, mixer,idleAnimation,jumpAnimation,runningJumpAnimation,runAnimation,walkAnimation,attackAnimation])
     useFrame((state, delta) => { mixer.update(delta); });
     return (
-        <group {...props} dispose={null} scale={.5} ref={groupRef} rotation={[0,Math.PI,0]} >
+        <group {...props} dispose={null} scale={.5} ref={groupRef} rotation={[0, 0,0]} >
             <group name="Scene">
                 <group name="Armature" userData={{ name: 'Armature' }}>
                     <primitive object={nodes.Hips} />
