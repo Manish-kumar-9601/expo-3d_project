@@ -13,7 +13,7 @@ export function Character (props)
 {
 
 
-    const { nodes, materials } = useGLTF('/assets/models/character.glb')
+    const { nodes, materials } = useGLTF('assets/models/character.glb')
 
     const groupRef = useRef();
     const { actions, mixer } = useStore((state) => state);
@@ -26,19 +26,19 @@ export function Character (props)
     // {
     //     actions['idle'].play();
     // })
-    const idleAnimation = useFBX('/assets/animations/idle.fbx').animations
+    const idleAnimation = useFBX('assets/animations/idle.fbx').animations
     idleAnimation[0].name = 'idle';
-    const jumpAnimation = useFBX('/assets/animations/jumping.fbx').animations
+    const jumpAnimation = useFBX('assets/animations/jumping.fbx').animations
     jumpAnimation[0].name = 'jump';
-    const runningJumpAnimation = useFBX('/assets/animations/runningJump.fbx').animations
+    const runningJumpAnimation = useFBX('assets/animations/runningJump.fbx').animations
     runningJumpAnimation[0].name = 'runningJump';
-    const runAnimation = useFBX('/assets/animations/running.fbx').animations
+    const runAnimation = useFBX('assets/animations/running.fbx').animations
     runAnimation[0].name = 'run';
-    const walkAnimation = useFBX('/assets/animations/walking.fbx').animations
+    const walkAnimation = useFBX('assets/animations/walking.fbx').animations
     walkAnimation[0].name = 'walk';
-    const attackAnimation = useFBX('/assets/animations/attack.fbx').animations
+    const attackAnimation = useFBX('assets/animations/attack.fbx').animations
     attackAnimation[0].name = 'attack';
-    const crouchAnimation = useFBX('/assets/animations/crouch.fbx').animations;
+    const crouchAnimation = useFBX('assets/animations/crouch.fbx').animations;
     crouchAnimation[0].name = 'crouch';
     console.log(idleAnimation[0]);
     // const mixer =  new AnimationMixer()
