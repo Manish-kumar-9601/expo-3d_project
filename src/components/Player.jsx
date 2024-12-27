@@ -34,8 +34,13 @@ export const Player = ({ position }) =>
     // const { forward, back, left, right, jump, crouch, run, attack } = get();
     // console.log("key", get());
     const keyboard = useKeyboard()
-    console.log(actions['walk']);
-    useContactMaterial('ground')
+    // console.log(actions['walk']);
+    useContactMaterial('ground', 'slippery', {
+        friction: 0,
+        restitution: 0.01,
+        contactEquationStiffness: 1e8,
+        contactEquationRelaxation: 3
+      })
     const [ref, body] = useCompoundBody(
         () => ({
             mass: 1,
@@ -60,7 +65,7 @@ export const Player = ({ position }) =>
                     }
                 }
             },
-            material: 'ground',
+            material: 'slippery',
             linearDamping: 0,
             position: position
         }),
@@ -128,7 +133,8 @@ export const Player = ({ position }) =>
                 activeAction = 1;
                 inputVelocity.x = 1;
             }
-            inputVelocity.setLength(delta * 10)
+            console.log("delta",delta);
+            inputVelocity.setLength(delta * 20)
             if (activeAction !== prevActiveAction.current)
             {
                 if (prevActiveAction.current !== 1 && activeAction === 1)
@@ -143,7 +149,7 @@ export const Player = ({ position }) =>
                 }
                 prevActiveAction.current = activeAction;
             }
-            if (keyboard[' '])
+            if (keyboard[' '] || keyboard['space'] ||keyboard['Space'])
             {
 
                 console.log('jump');
