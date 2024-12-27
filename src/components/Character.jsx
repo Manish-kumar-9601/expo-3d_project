@@ -12,7 +12,7 @@ import { useStore } from '../Store';
 export function Character (props)
 {
  
-console.log( idle);
+ 
     const { nodes, materials } = useGLTF('/assets/models/character.glb')
 
     const groupRef = useRef();
