@@ -25,7 +25,7 @@ export const Player = ({ position }) =>
     const targetQuaternion = useMemo(() => new Quaternion(), []);
     const worldPosition = useMemo(() => new Vector3(), []);
     const rayCasterOffset = useMemo(() => new Vector3(), []);
-    const constactNormal = useMemo(() => new Vector3(0, 1, 0), []);
+    const contactNormal = useMemo(() => new Vector3(0, 1, 0), []);
     const down = useMemo(() => new Vec3(0, -1, 0), []);
     const rotationMatrix = useMemo(() => new Matrix4(), []);
     const prevActiveAction = useRef(0);//0:idle ,1:run,2:walk,3:jump,4:runningJump,5:attack,6:crouch
@@ -33,54 +33,39 @@ export const Player = ({ position }) =>
     // const [_, get] = useKeyboardControls();
     // const { forward, back, left, right, jump, crouch, run, attack } = get();
     // console.log("key", get());
-    const keyboard=useKeyboard()
+    const keyboard = useKeyboard()
     console.log(actions['walk']);
     useContactMaterial('ground')
-    const [ref, body] = useCompoundBody(() => ({
-        mass: 1,
-        type: 'Dynamic',
-        position: [0, 3, 0],
-        fixedRotation: true,
-        linearDamping: 0.99,
-        shapes: [
+    const [ref, body] = useCompoundBody(
+        () => ({
+            mass: 1,
+            shapes: [
+                { args: [0.20], position: [0, 0.15, 0], type: 'Sphere' },
+                { args: [0.20], position: [0, 0.5, 0], type: 'Sphere' },
+                { args: [0.20], position: [0, .8, 0], type: 'Sphere' }
+            ],
+            onCollide: (e) =>
             {
-                args: [0.3, 0.9, 0.3],
-                position: [0, 0.9, 0],
-                type: 'Box',
-            }
-        ],
-        material: 'player',
-        onCollide: (e) =>
-        {
-            // Check if collision is with any ground object
-            const groundIds = Object.values(groundObject).map(obj => obj.id);
-            const collidedWithGround =
-                groundIds.includes(e.contact.bi.id) ||
-                groundIds.includes(e.contact.bj.id);
-
-            if (collidedWithGround)
-            {
-                // Set contact normal from collision data
-                constactNormal.set(
-                    e.contact.ni[0],
-                    e.contact.ni[1],
-                    e.contact.ni[2]
-                );
-
-                // Check if collision is from below (ground contact)
-                if (constactNormal.dot(down) > 0.5)
+                if (e.contact.bi.id !== e.body.id)
                 {
-                    playerGround.current = true;
-                    // Adjust player position to prevent sinking
-                    body.position.set(
-                        body.position.x,
-                        e.contact.bi.position.y + 0.9, // Height of collision box
-                        body.position.z
-                    );
+                    contactNormal.set(...e.contact.ni)
                 }
-            }
-        },
-    }), useRef());
+                if (contactNormal.dot(down) > 0.5)
+                {
+                    if (isJumpAction.current)
+                    {
+                        isJumpAction.current = false
+                        actions['jump'].fadeOut(0.1)
+                        actions['idle'].reset().fadeIn(0.1).play()
+                    }
+                }
+            },
+            material: 'ground',
+            linearDamping: 0,
+            position: position
+        }),
+        useRef()
+    )
     useFrame(({ raycaster }, delta) =>
     {
         // console.log("keys:", forward, back, left, right, jump, crouch, run, attack);
@@ -126,22 +111,22 @@ export const Player = ({ position }) =>
             {
                 // console.log(forward, "walk");
                 activeAction = 1
-                inputVelocity.z = -2;
+                inputVelocity.z = -1;
             }
             if (keyboard['KeyS'])
             {
                 activeAction = 1;
-                inputVelocity.z = 2
+                inputVelocity.z = 1
             }
-            if ( keyboard['KeyA'])
+            if (keyboard['KeyA'])
             {
                 activeAction = 1;
-                inputVelocity.x = -2
+                inputVelocity.x = -1
             }
             if (keyboard['KeyD'])
             {
                 activeAction = 1;
-                inputVelocity.x = 2;
+                inputVelocity.x = 1;
             }
             inputVelocity.setLength(delta * 10)
             if (activeAction !== prevActiveAction.current)
@@ -160,15 +145,14 @@ export const Player = ({ position }) =>
             }
             if (keyboard[' '])
             {
-                if (playerGround.current && !isJumpAction, current)
-                {
-                    console.log('jump');
-                    isJumpAction.current = true;
-                    actions['walk'].fadeOut(0.1);
-                    actions['idle'].fadeOut(0.1);
-                    actions['jump'].reset().fadeIn(0.1).play();
-                    inputVelocity.y = 6;
-                }
+
+                console.log('jump');
+                isJumpAction.current = true;
+                actions['walk'].fadeOut(0.1);
+                actions['idle'].fadeOut(0.1);
+                actions['jump'].reset().fadeIn(0.1).play();
+                inputVelocity.y = 6;
+
             }
             euler.y = yaw.rotation.y;
             quaternion.setFromEuler(euler)
