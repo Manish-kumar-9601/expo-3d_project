@@ -11,7 +11,7 @@ export const Game = () =>
 
        
                 <Map1 />
-                <Player position={[0, 3, 0]} />
+                <Player   />
           
             </RapierPhysics>
     )

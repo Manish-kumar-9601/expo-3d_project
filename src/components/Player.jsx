@@ -33,7 +33,7 @@ const lerpAngle = (start, end, t) =>
 
     return normalizeAngle(start + (end - start) * t);
 };
-export const Player = ({ position }) =>
+export const Player = (props) =>
 {
     const { WALK_SPEED, RUN_SPEED, ROTATION_SPEED } = useControls(
         "Character Control",
@@ -48,11 +48,11 @@ export const Player = ({ position }) =>
             },
         }
     );
-    const groupRef = useRef();
+
     const rigidBodyRef = useRef();
-    const playerGround = useRef();
+
     const isJumpAction = useRef(false);
-    const { rapier, world } = useRapier();
+
     const rotationTargetRef = useRef(0);
     const containerRef = useRef();
     const cameraTargetRef = useRef();
@@ -61,15 +61,7 @@ export const Player = ({ position }) =>
     const cameraWorldPositionRef = useRef(new Vector3());
     const cameraLookAtWorldPositionRef = useRef(new Vector3());
     const cameraLookAtRef = useRef(new Vector3());
-    // Memoized vectors and matrices
-    const velocity = useMemo(() => new Vector3(), []);
-    const inputVelocity = useMemo(() => new Vector3(), []);
-    const euler = useMemo(() => new Euler(), []);
-    const quaternion = useMemo(() => new Quaternion(), []);
-    const targetQuaternion = useMemo(() => new Quaternion(), []);
-    const worldPosition = useMemo(() => new Vector3(), []);
-    const rayCasterOffset = useMemo(() => new Vector3(), []);
-    const rotationMatrix = useMemo(() => new Matrix4(), []);
+
     const characterRotationTargetRef = useRef(0);
 
     const prevActiveAction = useRef(0);
@@ -79,20 +71,18 @@ export const Player = ({ position }) =>
     useFrame(({ camera }, delta) =>
     {
         if (!rigidBodyRef.current) return;
-        const rigidBody = rigidBodyRef.current;
+        rigidBodyRef.current;
         let activeAction = 0;
 
         // Handle input
         if (document.pointerLockElement)
         {
-            const velocity = rigidBody.linvel();
-            const inputVelocity = { x: 0, z: 0, y: 0 };
-
-
+            const velocity = rigidBodyRef.current.linvel();
+            const inputVelocity = { x: 0, z: 0, y: velocity.y };
             if (keyboard['KeyW'])
             {
                 activeAction = 1;
-                inputVelocity.z = -2;
+                inputVelocity.z = -1;
             }
             if (keyboard['KeyS'])
             {
@@ -112,7 +102,7 @@ export const Player = ({ position }) =>
             if (inputVelocity.x !== 0)
             {
                 // Adjust rotation speed
-                rotationTargetRef.current += (delta / 2) * inputVelocity.x;
+                rotationTargetRef.current += (delta ) * inputVelocity.x;
                 inputVelocity.x = 0
             }
             let speed = keyboard['Shift'] || keyboard['shift'] || keyboard['ShiftLeft'] || keyboard['ShiftRight'] ? RUN_SPEED : WALK_SPEED;
@@ -120,14 +110,14 @@ export const Player = ({ position }) =>
             if (inputVelocity.x !== 0 && inputVelocity.z !== 0)
             {
                 characterRotationTargetRef.current = Math.atan2(inputVelocity.x, inputVelocity.z);
-                rigidBody.x = Math.sin(characterRotationTargetRef.current + rotationTargetRef.current);
-                rigidBody.z = Math.cos(characterRotationTargetRef.current + rotationTargetRef.current);
+                velocity.x = Math.sin(characterRotationTargetRef.current + rotationTargetRef.current);
+                velocity.z = Math.cos(characterRotationTargetRef.current + rotationTargetRef.current);
             }
             characterRef.current.rotation.y = lerpAngle(
                 characterRef.current.rotation.y,
                 characterRotationTargetRef.current,
                 0.1
-              );
+            );
             // Animation handling
             if (activeAction !== prevActiveAction.current)
             {
@@ -154,10 +144,10 @@ export const Player = ({ position }) =>
                 inputVelocity.y = 4
                 setTimeout(() =>
                 {
-                    actions['idle'].fadeIn(0.4).play()
-                }, 5000);
+                    actions['idle'].fadeIn(0.2).play()
+                }, 3000);
             }
-
+            
             if (inputVelocity.x === 0 && inputVelocity.y === 0 && inputVelocity.z === 0)
             {
                 actions['walk'].fadeOut(0.1)
@@ -165,7 +155,9 @@ export const Player = ({ position }) =>
                 actions['idle'].reset().fadeIn(.1).play()
             }
             velocity.y = inputVelocity.y;
-            rigidBody.setLinvel(velocity, true)
+            velocity.x=inputVelocity.x;
+            velocity.z=inputVelocity.z;
+            rigidBodyRef.current.setLinvel(velocity, true)
 
             // Update animations
             // mixer.update(delta);
