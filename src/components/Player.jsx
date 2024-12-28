@@ -68,7 +68,7 @@ export const Player = ({ position }) =>
         const distance = worldPosition.distanceTo(groupRef.current.position)
         rotationMatrix.lookAt(worldPosition, groupRef.current.position, groupRef.current.up)
         targetQuaternion.setFromRotationMatrix(rotationMatrix)
-
+console.log('distance > 0.0001 && !groupRef.current.quaternion.equals(targetQuaternion)',distance > 0.0001 && !groupRef.current.quaternion.equals(targetQuaternion));
         if (distance > 0.0001 && !groupRef.current.quaternion.equals(targetQuaternion))
         {
             targetQuaternion.z = 0
@@ -121,16 +121,16 @@ export const Player = ({ position }) =>
                 }
                 prevActiveAction.current = activeAction
             }
-
+console.log('playerGround.current',playerGround.current);
             // Jump handling with ground check
-            if ((keyboard[' '] || keyboard['space'] || keyboard['Space']) && playerGround.current)
+            if ((keyboard[' '] || keyboard['space'] || keyboard['Space']) )
             {
                 isJumpAction.current = true
                 actions['walk'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['jump'].reset().fadeIn(0.1).play()
 
-                rigidBody.applyImpulse({ x: 0, y: 4, z: 0 }, true) // Reduced jump force
+                rigidBody.applyImpulse({ x: 0, y: 2, z: 0 }, true) // Reduced jump force
             }
 
             // Apply movement direction
