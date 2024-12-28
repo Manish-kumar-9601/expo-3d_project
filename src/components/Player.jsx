@@ -151,7 +151,7 @@ export const Player = (props) =>
                 }, 3000);
             }
             if(activeAction !== 5){
-                isCrouch=false
+                setIsCrouch(false)
             }
             if (inputVelocity.x === 0 && inputVelocity.y === 0 && inputVelocity.z === 0 && !isCrouch )
             {
