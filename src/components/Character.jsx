@@ -41,8 +41,17 @@ export function Character (props)
     attackAnimation[0].name = 'attack';
     const crouchAnimation = useFBX('/assets/animations/crouch.fbx').animations;
     crouchAnimation[0].name = 'crouch';
-    console.log(idleAnimation[0]);
-    // const mixer =  new AnimationMixer()
+    //Emotes
+    const flairAnimation= useFBX('/assets/animations/flair.fbx').animations;
+    flairAnimation[0].name='flair'
+    const houseDancingAnimation= useFBX('/assets/animations/houseDancing.fbx').animations;
+    houseDancingAnimation[0].name='houseDancing'
+    const breakDance1990Animation= useFBX('/assets/animations/crouch.fbx').animations;
+    breakDance1990Animation[0].name='breakDance1990'
+    const gangnamStyleAnimation= useFBX('/assets/animations/gangnamStyle.fbx').animations;
+    gangnamStyleAnimation[0].name=' gangnamStyle'
+    const stylishFlipAnimation= useFBX('/assets/animations/stylishFlip.fbx').animations;
+    stylishFlipAnimation[0].name='stylishFlip'
     useEffect(() =>
     {
         actions['idle'] = mixer.clipAction(idleAnimation[0], groupRef.current)
@@ -59,6 +68,16 @@ export function Character (props)
         actions['attack'].loop=LoopOnce;
         actions['crouch'] = mixer.clipAction(crouchAnimation[0], groupRef.current)
         actions['crouch'].loop=LoopRepeat;
+        actions['stylishFlip']=mixer.clipAction(stylishFlipAnimation[0],groupRef.current);
+        actions['stylishFlip'].loop=LoopOnce;
+        actions['gangnamStyle']=mixer.clipAction(stylishFlipAnimation[0],groupRef.current);
+        actions['gangnamStyle'].loop=LoopOnce;
+        actions['breakDance1990']=mixer.clipAction(stylishFlipAnimation[0],groupRef.current);
+        actions['breakDance1990'].loop=LoopOnce;
+        actions['houseDancing']=mixer.clipAction(stylishFlipAnimation[0],groupRef.current);
+        actions['houseDancing'].loop=LoopOnce;
+        actions['flair']=mixer.clipAction(stylishFlipAnimation[0],groupRef.current);
+        actions['flair'].loop=LoopOnce;
 
         actions['idle'].play()
     }, [actions, mixer,idleAnimation,jumpAnimation,runningJumpAnimation,runAnimation,walkAnimation,attackAnimation])
