@@ -10,7 +10,7 @@ Title: low poly forest 1
 import { useGLTF } from '@react-three/drei'
 import { useEffect, useRef } from 'react';
 import { useStore } from '../Store';
-import { usePlane } from '@react-three/cannon';
+ 
 
 export function Map2 (props)
 {
@@ -19,30 +19,11 @@ export function Map2 (props)
     const groundObject = useStore((state) => state.groundObject)
 
     // Add physics ground plane
-    const [ref] = usePlane(() => ({
-        rotation: [-Math.PI / 2, 0, 0],
-        position: [0, .5, 0],
-        type: 'Static',
-        material: 'ground'
-    }))
-
-    useEffect(() => {
-        const id = groundRef.current.id
-        groundObject[id] = groundRef.current
-        return () => {
-            delete groundObject[id]
-        }
-    }, [groundObject])
+     
 
     return (
         <>
- <group {...props} dispose={null}>
-            {/* Physics ground plane */}
-            <mesh ref={ref} visible={false}>
-                <planeGeometry args={[1000, 1000]} />
-            </mesh>
-
-</group>
+ 
         <group {...props} dispose={null} ref={groundRef}>
             <group name="Sketchfab_Scene">
                 <group

@@ -6,6 +6,7 @@ import {   useFBX, useGLTF } from '@react-three/drei'
 import {  LoopOnce, LoopRepeat } from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useStore } from '../Store';
+import { RigidBody } from '@react-three/rapier';
  
  
 export function Character (props)
@@ -63,6 +64,7 @@ export function Character (props)
     }, [actions, mixer,idleAnimation,jumpAnimation,runningJumpAnimation,runAnimation,walkAnimation,attackAnimation])
     useFrame((state, delta) => { mixer.update(delta); });
     return (
+      
         <group {...props} dispose={null} scale={.5} ref={groupRef} rotation={[0, 0,0]} >
             <group name="Scene">
                 <group name="Armature" userData={{ name: 'Armature' }}>
@@ -141,6 +143,7 @@ export function Character (props)
                 </group>
             </group>
         </group>
+        
     )
 }
 

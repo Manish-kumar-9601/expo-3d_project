@@ -2,22 +2,17 @@
 import {Map2} from './Map2';
 import {Player} from './Player'
 import { Map1 } from './Map1';
+import { Physics as RapierPhysics } from '@react-three/rapier';
+
 export const Game = () =>
 {
     return (
-        <Physics
-            // gravity={[0, -9.81, 0]}
-            // defaultContactMaterial={{
-            //     friction: 0.1,
-            //     restitution: 0.1,
-            //     contactEquationStiffness: 1e6,
-            //     contactEquationRelaxation: 3,
-            // }}
-        >
-            <Debug>
-                <Map2 />
+        <RapierPhysics debug >
+
+       
+                <Map1 />
                 <Player position={[0, 3, 0]} />
-            </Debug>
-        </Physics>
+          
+            </RapierPhysics>
     )
 }
