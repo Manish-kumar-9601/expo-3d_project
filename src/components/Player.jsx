@@ -187,34 +187,37 @@ export const Player = ({ position }) =>
     })
 
     return (
-        <RigidBody
-        ref={rigidBodyRef}
-        colliders={false}
-        mass={1}
-        type="dynamic"
-        position={[0,3,0]}
-        enabledRotations={[false, false, false]}
-        lockRotations={true}
-        friction={0.2}
-        restitution={0}
-        gravityScale={1}
-        onCollisionEnter={() => {
-            if (isJumpAction.current) {
-                isJumpAction.current = false
-                actions['jump'].fadeOut(0.1)
-                actions['idle'].reset().fadeIn(0.1).play()
-            }
-        }}
-    >
-        <group ref={groupRef}>
-            <CapsuleCollider 
-                args={[1, 0.4]} // [height, radius]
-                position={[0, 1.1, 0]} // Adjusted to match character height
-            />
-            <Suspense fallback={null}>
-                <Character />
-            </Suspense>
+        <group position={position} ref={groupRef}>
+            <RigidBody
+                ref={rigidBodyRef}
+                colliders={false}
+                mass={1}
+                type="dynamic"
+                position={position}
+                enabledRotations={[false, false, false]}
+                lockRotations={true}
+                friction={0.2}
+                restitution={0}
+                gravityScale={1}
+                onCollisionEnter={() =>
+                {
+                    if (isJumpAction.current)
+                    {
+                        isJumpAction.current = false
+                        actions['jump'].fadeOut(0.1)
+                        actions['idle'].reset().fadeIn(0.1).play()
+                    }
+                }}
+            >
+                <CapsuleCollider
+                    args={[0.4, 0.4]} // Increased size
+                    position={[0, 0.8, 0]} // Raised position
+                    friction={1}
+                />
+                <Suspense fallback={null}>
+                    <Character />
+                </Suspense>
+            </RigidBody>
         </group>
-    </RigidBody>
     )
 }
