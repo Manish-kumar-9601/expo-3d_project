@@ -3,21 +3,24 @@ import { Character } from './Character'
 import { useFollowCam } from './useFollowCam'
 import { Euler, Matrix4, Quaternion, Vector3 } from 'three'
 import { useFrame } from '@react-three/fiber'
-import { RigidBody, CapsuleCollider } from '@react-three/rapier'
+import { RigidBody, CapsuleCollider, useRapier } from '@react-three/rapier'
 import { useStore } from '../Store'
 import useKeyboard from '../useKeyboard'
 
-function rotateTowards(currentQuaternion, targetQuaternion, step) {
+function rotateTowards (currentQuaternion, targetQuaternion, step)
+{
     currentQuaternion.slerp(targetQuaternion, step)
 }
 
-export const Player = ({ position }) => {
+export const Player = ({ position }) =>
+{
     const groupRef = useRef()
     const rigidBodyRef = useRef()
     const playerGround = useRef()
     const isJumpAction = useRef(false)
-    const { yaw } = useFollowCam(groupRef, [0, .8, 1.2])
-    
+    const { yaw } = useFollowCam(groupRef, [0, 1.3, 2])
+    const { rapier, world } = useRapier()
+
     // Memoized vectors and matrices
     const velocity = useMemo(() => new Vector3(), [])
     const inputVelocity = useMemo(() => new Vector3(), [])
@@ -28,40 +31,46 @@ export const Player = ({ position }) => {
     const rayCasterOffset = useMemo(() => new Vector3(), [])
     const rotationMatrix = useMemo(() => new Matrix4(), [])
 
-    const prevActiveAction = useRef(0) // 0:idle, 1:run, 2:walk, 3:jump
+    const prevActiveAction = useRef(0)
     const { groundObject, actions, mixer } = useStore((state) => state)
     const keyboard = useKeyboard()
 
-    useFrame(({ raycaster }, delta) => {
+    useFrame(({ raycaster }, delta) =>
+    {
         if (!rigidBodyRef.current) return
 
         let activeAction = 0
         const rigidBody = rigidBodyRef.current
 
-        // Lock rotation to vertical axis only
+        // Lock rotation
         rigidBody.setEnabledRotations(false, false, false)
 
         // Get current position
         const currentPosition = rigidBody.translation()
         worldPosition.set(currentPosition.x, currentPosition.y, currentPosition.z)
 
-        // Ground check using raycaster
-        playerGround.current = false
-        rayCasterOffset.copy(worldPosition)
-        rayCasterOffset.y += 0.1
-        raycaster.set(rayCasterOffset, new Vector3(0, -1, 0))
-        raycaster.intersectObjects(Object.values(groundObject), false).forEach(i => {
-            if (i.distance <= 0.021) {
-                playerGround.current = true
-            }
-        })
+        // Enhanced ground check with ray casting
+        const ray = new rapier.Ray(
+            { x: currentPosition.x, y: currentPosition.y + 0.1, z: currentPosition.z },
+            { x: 0, y: -1, z: 0 }
+        )
+        const hit = world.castRay(ray, 0.5, true)
+        playerGround.current = hit !== null && hit.toi < 0.2
+
+        // Prevent falling through by setting minimum Y position
+        if (currentPosition.y < -50)
+        {
+            rigidBody.setTranslation({ x: position[0], y: position[1], z: position[2] }, true)
+            rigidBody.setLinvel({ x: 0, y: 0, z: 0 }, true)
+        }
 
         // Character rotation
         const distance = worldPosition.distanceTo(groupRef.current.position)
         rotationMatrix.lookAt(worldPosition, groupRef.current.position, groupRef.current.up)
         targetQuaternion.setFromRotationMatrix(rotationMatrix)
-        
-        if (distance > 0.0001 && !groupRef.current.quaternion.equals(targetQuaternion)) {
+
+        if (distance > 0.0001 && !groupRef.current.quaternion.equals(targetQuaternion))
+        {
             targetQuaternion.z = 0
             targetQuaternion.x = 0
             targetQuaternion.normalize()
@@ -69,79 +78,108 @@ export const Player = ({ position }) => {
         }
 
         // Handle input
-        if (document.pointerLockElement) {
+        if (document.pointerLockElement)
+        {
             inputVelocity.set(0, 0, 0)
 
-            if (keyboard['KeyW']) {
+            if (keyboard['KeyW'])
+            {
                 activeAction = 1
                 inputVelocity.z = -1
             }
-            if (keyboard['KeyS']) {
+            if (keyboard['KeyS'])
+            {
                 activeAction = 1
                 inputVelocity.z = 1
             }
-            if (keyboard['KeyA']) {
+            if (keyboard['KeyA'])
+            {
                 activeAction = 1
                 inputVelocity.x = -1
             }
-            if (keyboard['KeyD']) {
+            if (keyboard['KeyD'])
+            {
                 activeAction = 1
                 inputVelocity.x = 1
             }
 
-            inputVelocity.setLength(delta * 20)
+            // Adjust movement speed
+            inputVelocity.setLength(delta * 15) // Reduced speed for better control
 
-            // Handle animations
-            if (activeAction !== prevActiveAction.current) {
-                if (prevActiveAction.current !== 1 && activeAction === 1) {
+            // Animation handling
+            if (activeAction !== prevActiveAction.current)
+            {
+                if (prevActiveAction.current !== 1 && activeAction === 1)
+                {
                     actions['idle'].fadeOut(0.1)
                     actions['walk'].reset().fadeIn(0.1).play()
                 }
-                if (prevActiveAction.current !== 0 && activeAction === 0) {
+                if (prevActiveAction.current !== 0 && activeAction === 0)
+                {
                     actions['walk'].fadeOut(0.1)
                     actions['idle'].reset().fadeIn(0.1).play()
                 }
                 prevActiveAction.current = activeAction
             }
 
-            // Handle jumping
-            if (keyboard[' '] || keyboard['space'] || keyboard['Space']) {
-                if (playerGround.current) {
-                    isJumpAction.current = true
-                    actions['walk'].fadeOut(0.1)
-                    actions['idle'].fadeOut(0.1)
-                    actions['jump'].reset().fadeIn(0.1).play()
-                    
-                    // Apply jump impulse
-                    rigidBody.applyImpulse({ x: 0, y: 2, z: 0 }, true)
-                }
+            // Jump handling with ground check
+            if ((keyboard[' '] || keyboard['space'] || keyboard['Space']) && playerGround.current)
+            {
+                isJumpAction.current = true
+                actions['walk'].fadeOut(0.1)
+                actions['idle'].fadeOut(0.1)
+                actions['jump'].reset().fadeIn(0.1).play()
+
+                rigidBody.applyImpulse({ x: 0, y: 4, z: 0 }, true) // Reduced jump force
             }
 
-            // Apply movement
+            // Apply movement direction
             euler.y = yaw.rotation.y
             quaternion.setFromEuler(euler)
             inputVelocity.applyQuaternion(quaternion)
-            
-            // Apply movement impulse
-            rigidBody.applyImpulse(
-                { x: inputVelocity.x, y: inputVelocity.y, z: inputVelocity.z },
-                true
-            )
 
-            // Apply damping when on ground
-            if (playerGround.current) {
+            // Apply movement with ground friction
+            if (playerGround.current)
+            {
+                rigidBody.applyImpulse(
+                    {
+                        x: inputVelocity.x * 0.8,
+                        y: inputVelocity.y,
+                        z: inputVelocity.z * 0.8
+                    },
+                    true
+                )
+
+                // Ground friction
                 const currentVel = rigidBody.linvel()
                 rigidBody.setLinvel(
-                    { x: currentVel.x * 0.2, y: currentVel.y, z: currentVel.z * 0.2 },
+                    {
+                        x: currentVel.x * 0.95,
+                        y: currentVel.y,
+                        z: currentVel.z * 0.95
+                    },
+                    true
+                )
+            } else
+            {
+                // Air control
+                rigidBody.applyImpulse(
+                    {
+                        x: inputVelocity.x * 0.2,
+                        y: 0,
+                        z: inputVelocity.z * 0.2
+                    },
                     true
                 )
             }
         }
 
         // Update animations
-        if (activeAction === 1) {
+        if (activeAction === 1)
+        {
             mixer.update(distance / 3)
-        } else {
+        } else
+        {
             mixer.update(delta)
         }
 
@@ -150,29 +188,33 @@ export const Player = ({ position }) => {
 
     return (
         <RigidBody
-                ref={rigidBodyRef}
-                colliders={false}
-                mass={1}
-                type="dynamic"
-                position={position}
-                enabledRotations={[false, false, false]}
-                onCollisionEnter={() => {
-                    if (isJumpAction.current) {
-                        isJumpAction.current = false
-                        actions['jump'].fadeOut(0.1)
-                        actions['idle'].reset().fadeIn(0.1).play()
-                    }
-                }}
-            >
-        <group position={position} ref={groupRef}>
-                <CapsuleCollider args={[0.3, 0.3]} position={[0, 0.6, 0]} />
-                <group  >
-
-                <Suspense fallback={null}>
-                    <Character />
-                </Suspense>
-                </group>
+        ref={rigidBodyRef}
+        colliders={false}
+        mass={1}
+        type="dynamic"
+        position={[0,3,0]}
+        enabledRotations={[false, false, false]}
+        lockRotations={true}
+        friction={0.2}
+        restitution={0}
+        gravityScale={1}
+        onCollisionEnter={() => {
+            if (isJumpAction.current) {
+                isJumpAction.current = false
+                actions['jump'].fadeOut(0.1)
+                actions['idle'].reset().fadeIn(0.1).play()
+            }
+        }}
+    >
+        <group ref={groupRef}>
+            <CapsuleCollider 
+                args={[1, 0.4]} // [height, radius]
+                position={[0, 1.1, 0]} // Adjusted to match character height
+            />
+            <Suspense fallback={null}>
+                <Character />
+            </Suspense>
         </group>
-            </RigidBody>
+    </RigidBody>
     )
 }
