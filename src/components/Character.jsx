@@ -64,8 +64,8 @@ export function Character (props)
     }, [actions, mixer,idleAnimation,jumpAnimation,runningJumpAnimation,runAnimation,walkAnimation,attackAnimation])
     useFrame((state, delta) => { mixer.update(delta); });
     return (
-      
-        <group {...props} dispose={null} scale={.5} ref={groupRef} rotation={[0, 0,0]} >
+ 
+        <group {...props} dispose={null} scale={.5} ref={groupRef} position={[0,1,0]} >
             <group name="Scene">
                 <group name="Armature" userData={{ name: 'Armature' }}>
                     <primitive object={nodes.Hips} />
@@ -143,6 +143,7 @@ export function Character (props)
                 </group>
             </group>
         </group>
+      
         
     )
 }

@@ -12,7 +12,10 @@ export const useFollowCam = (ref,offSet) =>
     const worldPosition=useMemo(()=>new Vector3(),[])
     function onDocumentMouseMove(event) {
         if(document.pointerLockElement){
-            event.preventDefault();
+            if(event){
+                event.preventDefault();
+            
+            
             yaw.rotation.y -= event.movementX * 0.002;
             const v=pitch.rotation.x - event.movementY * 0.002;
             console.log( 'const v=pitch.rotation.x - event.movementY * 0.002; v=',v);
@@ -20,14 +23,20 @@ export const useFollowCam = (ref,offSet) =>
                 pitch.rotation.x=v;
             }
         }
+    }else{
+        console.log('unideifned',event);
+    }
     }
 function onDocumentMouseWheel(event) {
     if(document.pointerLockElement){
-        event.preventDefault();
-        const v=camera.position.z - event.deltaY * 0.02;
-        if(v>=0.5 && v<=5){
-            camera.position.z=v;
+        if(event){
+            event.preventDefault();
+            const v=camera.position.z - event.deltaY * 0.02;
+            if(v>=0.5 && v<=5){
+                camera.position.z=v;
+            }
         }
+       
     }
 }
 
@@ -49,7 +58,8 @@ function onDocumentMouseWheel(event) {
     },[camera])
     useFrame((state,delta)=>{
         ref.current.getWorldPosition(worldPosition)
-        pivot.position.lerp(worldPosition,delta*5)
+        pivot.position.lerp(worldPosition,delta*3)
+        // state.camera.lookAt(ref.current)
     })
     return {pivot,alt,yaw,pitch}
 }
