@@ -35,7 +35,7 @@ const lerpAngle = (start, end, t) =>
 };
 export const Player = (props) =>
 {
-    const [isCrouch,setIsCrouch]=useState(false)
+    const [isCrouch, setIsCrouch] = useState(false)
     const { WALK_SPEED, RUN_SPEED, ROTATION_SPEED } = useControls(
         "Character Control",
         {
@@ -71,10 +71,10 @@ export const Player = (props) =>
 
     useFrame(({ camera }, delta) =>
     {
-        if (!rigidBodyRef.current) return;
-        rigidBodyRef.current;
-        let activeAction = 0;//0:idle,1:walk,2:running,3:jump,4:running jump, 5:crouch,6:punch,
+        // if (!rigidBodyRef.current) return;
         
+        let activeAction = 0;//0:idle,1:walk,2:running,3:jump,4:running jump, 5:crouch,6:punch,
+
         // Handle input
         if (document.pointerLockElement)
         {
@@ -83,28 +83,31 @@ export const Player = (props) =>
             if (keyboard['KeyW'])
             {
                 activeAction = 1;
-                
+                console.log('walk');
                 inputVelocity.z = 1;
             }
             if (keyboard['KeyS'])
             {
                 activeAction = 1;
+                console.log('back');
                 inputVelocity.z = -1;
             }
             if (keyboard['KeyA'])
             {
                 activeAction = 1;
+                console.log('left');
                 inputVelocity.x = 1;
             }
             if (keyboard['KeyD'])
             {
                 activeAction = 1;
+                console.log('right');
                 inputVelocity.x = -1;
             }
             if (inputVelocity.x !== 0)
             {
                 // Adjust rotation speed
-                rotationTargetRef.current += (delta ) * inputVelocity.x;
+                rotationTargetRef.current += (delta) * inputVelocity.x;
                 inputVelocity.x = 0
             }
             let speed = keyboard['Shift'] || keyboard['shift'] || keyboard['ShiftLeft'] || keyboard['ShiftRight'] ? RUN_SPEED : WALK_SPEED;
@@ -112,8 +115,8 @@ export const Player = (props) =>
             if (inputVelocity.x !== 0 && inputVelocity.z !== 0)
             {
                 characterRotationTargetRef.current = Math.atan2(inputVelocity.x, inputVelocity.z);
-                velocity.x = Math.sin(characterRotationTargetRef.current + rotationTargetRef.current);
-                velocity.z = Math.cos(characterRotationTargetRef.current + rotationTargetRef.current);
+                velocity.x = Math.sin(characterRotationTargetRef.current);
+                velocity.z = Math.cos(characterRotationTargetRef.current);
             }
             characterRef.current.rotation.y = lerpAngle(
                 characterRef.current.rotation.y,
@@ -144,58 +147,65 @@ export const Player = (props) =>
                 actions['idle'].fadeOut(0.1);
                 actions['jump'].reset().fadeIn(0.1).play();
                 inputVelocity.y = 4
-                activeAction=3
+                activeAction = 3
                 setTimeout(() =>
                 {
                     actions['idle'].fadeIn(0.2).play()
                 }, 3000);
             }
-            if(activeAction !== 5){
+            if (activeAction !== 5)
+            {
                 setIsCrouch(false)
             }
-            if (inputVelocity.x === 0 && inputVelocity.y === 0 && inputVelocity.z === 0 && !isCrouch )
+            if (inputVelocity.x === 0 && inputVelocity.y === 0 && inputVelocity.z === 0 && !isCrouch)
             {
                 actions['walk'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.4)
                 actions['idle'].reset().fadeIn(.1).play()
             }
-            if(keyboard['KeyE']){
+            if (keyboard['KeyE'])
+            {
 
                 actions['walk'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.4)
                 actions['runningJump'].fadeOut(0.3)
                 actions['attack'].reset().fadeIn(.1).play()
-                activeAction=6;
+                activeAction = 6;
             }
-            if(keyboard['KeyC']){
-                setIsCrouch((prev)=>!prev)
-                if(isCrouch){
+            if (keyboard['KeyC'])
+            {
+                setIsCrouch((prev) => !prev)
+                if (isCrouch)
+                {
                     actions['walk'].fadeOut(0.1)
                     actions['jump'].fadeOut(0.4)
                     actions['runningJump'].fadeOut(0.3)
                     actions['crouch'].reset().fadeIn(.1).play()
-                    activeAction=5;
+                    activeAction = 5;
                 }
-                
+
             }
-            if(keyboard['KeyW']&& keyboard['ShiftLeft']||keyboard['ShiftRight']||keyboard['shift'] ||keyboard['Shift'] ){
+            if (keyboard['KeyW'] && keyboard['ShiftLeft'] || keyboard['ShiftRight'] || keyboard['Shift'])
+            {
                 actions['walk'].fadeOut(0.1)
-                actions['run'].reset().fadeIn(.1).play() 
-                
-                activeAction=2;
-            }  if(keyboard['KeyW']&& keyboard['ShiftLeft']||keyboard['ShiftRight']||keyboard['shift'] ||keyboard['Shift'] && keyboard[' '] ){
+                actions['run'].reset().fadeIn(.1).play()
+
+                activeAction = 2;
+            }
+            if (keyboard['KeyW'] && keyboard['ShiftLeft'] || keyboard['ShiftRight'] || keyboard['shift'] || keyboard['Shift'] && keyboard[' '])
+            {
                 actions['walk'].fadeOut(0.1)
                 actions['run'].fadeOut(0.1)
-                actions['runningJump'].reset().fadeIn(.1).play() 
-                activeAction=4;
+                actions['runningJump'].reset().fadeIn(.1).play()
+                activeAction = 4;
             }
             velocity.y = inputVelocity.y;
-            velocity.x=inputVelocity.x;
-            velocity.z=inputVelocity.z;
+            velocity.x = inputVelocity.x;
+            velocity.z = inputVelocity.z;
             rigidBodyRef.current.setLinvel(velocity, true)
 
             // Update animations
-            // mixer.update(delta);
+            mixer.update(delta);
         }
         // CAMERA
         containerRef.current.rotation.y = MathUtils.lerp(
@@ -217,8 +227,8 @@ export const Player = (props) =>
     return (
         <RigidBody colliders={false} lockRotations ref={rigidBodyRef}>
             <group ref={containerRef}>
-                <group ref={cameraTargetRef} position={[0, 0, 1.5]} />
-                <group ref={cameraPositionRef} position={[0, 0.6, -.7]} />
+                <group ref={cameraTargetRef} position={[0, 0, 1.6]} />
+                <group ref={cameraPositionRef} position={[0, 0.3, -.9]} />
                 <group ref={characterRef}>
                     <Character position-y={-0.45} />
                 </group>

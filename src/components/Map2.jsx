@@ -8,23 +8,24 @@ Title: low poly forest 1
 
 
 import { useGLTF } from '@react-three/drei'
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useStore } from '../Store';
- 
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { useLoader } from "@react-three/fiber"
+import { RigidBody } from '@react-three/rapier';
+import { DoubleSide, FogExp2, MeshStandardMaterial } from 'three';
 
 export function Map2 (props)
 {
-    const { nodes, materials } = useGLTF('/assets/models/map2.glb')
+    const { nodes, materials } = useLoader(GLTFLoader,'/assets/models/map2.glb')
     const groundRef = useRef()
-    const groundObject = useStore((state) => state.groundObject)
 
-    // Add physics ground plane
-     
 
     return (
         <>
- 
-        <group {...props} dispose={null} ref={groundRef}>
+ <RigidBody type='fixed' colliders='trimesh' position={[0,-.5,0]}  >
+
+        <group {...props} dispose={null} ref={groundRef} position={[0,-.0,0]} >
             <group name="Sketchfab_Scene">
                 <group
                     name="Sketchfab_model"
@@ -64,14 +65,15 @@ export function Map2 (props)
                             geometry={nodes.Object_5.geometry}
                             material={materials.Material}
                             userData={{ name: 'Object_5' }}
-                        />
+                            />
                     </group>
                 </group>
             </group>
         </group>
+                            </RigidBody>
         </>
 
     )
 }
 
-useGLTF.preload('/assets/models/map2.glb')
+useLoader.preload(GLTFLoader,'/assets/models/map2.glb')

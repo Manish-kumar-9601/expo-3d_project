@@ -3,14 +3,14 @@ import { useEffect, useRef } from "react"
 import { useStore } from "../Store"
 import { useCompoundBody, usePlane } from "@react-three/cannon"
 import { RigidBody } from "@react-three/rapier"
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { useLoader } from "@react-three/fiber"
+
 
 export function Map1(props) {
-    const { nodes, materials } = useGLTF('/assets/models/map1.glb')
+    const { nodes, materials } = useLoader(GLTFLoader,'/assets/models/map1.glb')
     const groundRef = useRef()
     const groundObject = useStore((state) => state.groundObject)
-
- 
- 
     useEffect(() => {
         const id = groundRef.current.id
         groundObject[id] = groundRef.current
