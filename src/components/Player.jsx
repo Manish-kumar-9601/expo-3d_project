@@ -40,7 +40,7 @@ const lerpAngle = (start, end, t) => {
     return normalizeAngle(start + (end - start) * t);
 };
 
-export const Player = React.memo(() => {
+export const Player =  () => {
     const { actions, mixer } = useStore((state)=>state);
     const [isCrouch, setIsCrouch] = useState(false);
     
@@ -122,7 +122,7 @@ export const Player = React.memo(() => {
     useFrame(({ camera }, delta) => {
         if ( refs.rigidBody.current) {
 
-        }
+        
 
         const velocity = refs.rigidBody.current.linvel();
         const inputVelocity = { x: 0, z: 0, y: velocity.y };
@@ -148,7 +148,7 @@ export const Player = React.memo(() => {
 
         // Update physics
         updatePhysics(velocity, inputVelocity);
-
+    }
         // Update character rotation
         if (refs.character.current) {
             refs.character.current.rotation.y = lerpAngle(
@@ -175,9 +175,9 @@ export const Player = React.memo(() => {
         }
 
         // Update animations
-        if (mixer) {
-            mixer.update(delta);
-        }
+        // if (mixer) {
+        //     mixer.update(delta);
+        // }
     });
 
     return (
@@ -186,10 +186,10 @@ export const Player = React.memo(() => {
                 <group ref={refs.cameraTarget} position={[0, 0, 1.6]} />
                 <group ref={refs.cameraPosition} position={[0, 0.3, -.9]} />
                 <group ref={refs.character}>
-                    <Character position-y={-0.45} />
+                    <Character position-y={-0.45}  />
                 </group>
             </group>
             <CapsuleCollider args={[.38, 0.154]} />
         </RigidBody>
     );
-});
+}

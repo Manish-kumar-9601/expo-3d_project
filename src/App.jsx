@@ -8,31 +8,7 @@ import { Game } from "./components/Game";
 export default function App ()
 {
   const [isEntered, setIsEntered] = useState(false);
-  useEffect(() =>
-  {
-    const handlePointerLockError = (event) =>
-    {
-      console.error('Pointer lock error:', event);
-    };
-
-    const handlePointerLockChange = () =>
-    {
-      if (document.pointerLockElement === null)
-      {
-        console.log('Pointer lock was exited.');
-        setIsEntered(false);
-      }
-    };
-
-    document.addEventListener('pointerlockerror', handlePointerLockError);
-    document.addEventListener('pointerlockchange', handlePointerLockChange);
-
-    return () =>
-    {
-      document.removeEventListener('pointerlockerror', handlePointerLockError);
-      document.removeEventListener('pointerlockchange', handlePointerLockChange);
-    };
-  }, []);
+ 
 
   const canvasProps = useMemo(() => ({
     shadows: true,
@@ -52,7 +28,10 @@ export default function App ()
       console.error('Pointer Lock API is not supported by this browser.');
     }
   }
-
+  document.addEventListener('click',(e)=>{
+ 
+    e.target.requestPointerLock()
+  })
   const spotLightProps = useMemo(() => ({
     angle: Math.PI / 3,
     penumbra: 0.5,
@@ -63,7 +42,7 @@ export default function App ()
   }), []);
 
   const instructionsClass = useMemo(() =>
-    `transition top-0 bottom-0 right-0 left-0 text flex flex-col items-center justify-center align-baseline my-10 p-5 m-auto text-balance z-10 ${isEntered ? 'hidden':'' }`,
+    `transition top-0 bottom-0 right-0 left-0 text flex flex-col items-center justify-center align-baseline my-10 p-5 m-auto text-balance z-10 ${isEntered ? 'hidden' : ''}`,
     [isEntered]
   );
 
@@ -76,14 +55,14 @@ export default function App ()
           <p>SPACE to jump. C to crouch and Shift + W to run</p>
           <button
             className="bg-white text-black text-center w-40 my-3"
-            onClick={() => startGame()}
+            
           >
             start
           </button>
         </div>
       </section>
 
-      <Canvas {...canvasProps} id="gameCanvas">
+      <Canvas {...canvasProps} id="gameCanvas"  shadows onPointerDown={(e) => e.target.requestPointerLock()} >
         <Environment background preset="forest" />
         <Suspense fallback={<Loader />}>
           <spotLight position={[2.5, 5, 5]} {...spotLightProps} />
