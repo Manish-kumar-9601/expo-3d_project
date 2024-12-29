@@ -64,7 +64,7 @@ export default function App ()
           </button>
         </div>
       </section>
-
+ 
       <Canvas {...canvasProps} id="gameCanvas"  shadows onPointerDown={(e) => e.target.requestPointerLock()} >
         <Environment background preset="forest" />
         <Suspense fallback={<Loader />}>

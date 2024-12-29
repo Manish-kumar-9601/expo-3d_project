@@ -99,7 +99,32 @@ console.log(keyboard);
         if ( refs.rigidBody.current) {
         const velocity = refs.rigidBody.current.linvel();
         const inputVelocity = { x: 0, z: 0, y: velocity.y };
-
+            //emote handling
+            if(keyboard['Digit1']){
+                actions['walk'].fadeOut(0.1)
+                actions['idle'].fadeOut(0.1)
+                actions['houseDancing'].reset().fadeIn(0.1).play()
+            }
+            if(keyboard['Digit2']){
+                actions['walk'].fadeOut(0.1)
+                actions['idle'].fadeOut(0.1)
+                actions['stylishFlip'].reset().fadeIn(0.1).play()
+            }
+            if(keyboard['Digit3']){
+                actions['walk'].fadeOut(0.1)
+                actions['idle'].fadeOut(0.1)
+                actions['gangnamStyle'].reset().fadeIn(0.1).play()
+            }
+            if(keyboard['Digit4']){
+                actions['walk'].fadeOut(0.1)
+                actions['idle'].fadeOut(0.1)
+                actions['breakDance1990'].reset().fadeIn(0.1).play()
+            }
+            if(keyboard['Digit5']){
+                actions['walk'].fadeOut(0.1)
+                actions['idle'].fadeOut(0.1)
+                actions['flair'].reset().fadeIn(0.1).play()
+            }
         // Handle movement
         if (keyboard['KeyW']){ inputVelocity.z =1; 
 
@@ -126,7 +151,12 @@ console.log(keyboard);
             inputVelocity.x=0;
             inputVelocity.z=0;
         }
-        // Handle animations
+        
+        if(keyboard['KeyE']){
+            actions['walk'].fadeOut(0.1)
+            actions['idle'].fadeOut(0.1)
+            actions['attack'].reset().fadeIn(0.1).play()
+        }
         if (inputVelocity.x !== 0 || inputVelocity.z !== 0 ) {
             animationHandlers.startWalk();
             

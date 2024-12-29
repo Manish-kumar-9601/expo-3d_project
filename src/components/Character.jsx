@@ -43,7 +43,7 @@ export const Character = React.memo((props) =>
     flairAnimation[0].name = 'flair'
 
     const houseDancingAnimation = useGLTF('/assets/animations/houseDance.glb').animations;
-    // useGLTF('/assets/animations/houseDancing.glb').animations;
+     
     houseDancingAnimation[0].name = 'houseDancing'
     const breakDance1990Animation = useGLTF('/assets/animations/crouch.glb').animations;
     breakDance1990Animation[0].name = 'breakDance1990'
@@ -69,13 +69,13 @@ export const Character = React.memo((props) =>
         actions['crouch'].loop = LoopRepeat;
         actions['stylishFlip'] = mixer.clipAction(stylishFlipAnimation[0], groupRef.current);
         actions['stylishFlip'].loop = LoopOnce;
-        actions['gangnamStyle'] = mixer.clipAction(stylishFlipAnimation[0], groupRef.current);
+        actions['gangnamStyle'] = mixer.clipAction(gangnamStyleAnimation[0], groupRef.current);
         actions['gangnamStyle'].loop = LoopOnce;
-        actions['breakDance1990'] = mixer.clipAction(stylishFlipAnimation[0], groupRef.current);
+        actions['breakDance1990'] = mixer.clipAction(breakDance1990Animation[0], groupRef.current);
         actions['breakDance1990'].loop = LoopOnce;
-        actions['houseDancing'] = mixer.clipAction(stylishFlipAnimation[0], groupRef.current);
+        actions['houseDancing'] = mixer.clipAction(houseDancingAnimation[0], groupRef.current);
         actions['houseDancing'].loop = LoopOnce;
-        actions['flair'] = mixer.clipAction(stylishFlipAnimation[0], groupRef.current);
+        actions['flair'] = mixer.clipAction(flairAnimation[0], groupRef.current);
         actions['flair'].loop = LoopOnce;
         actions['idle'].play()
     }, [actions, mixer, idleAnimation, jumpAnimation, runningJumpAnimation, runAnimation, walkAnimation, attackAnimation])
