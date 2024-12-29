@@ -7,13 +7,13 @@ Title: low poly forest 1
 */
 
 
-import { useGLTF } from '@react-three/drei'
-import { useEffect, useMemo, useRef } from 'react';
-import { useStore } from '../Store';
+ 
+import {  useRef } from 'react';
+ 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { useLoader } from "@react-three/fiber"
 import { RigidBody } from '@react-three/rapier';
-import { DoubleSide, FogExp2, MeshStandardMaterial } from 'three';
+ 
 
 export function Map2 (props)
 {
