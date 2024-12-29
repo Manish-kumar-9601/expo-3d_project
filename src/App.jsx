@@ -26,9 +26,9 @@ export default function App ()
   return (
 
     <>
-      <section id="instructions" className={`transition top-0 bottom-0 right-0 left-0 text flex items-center justify-center align-baseline   p-5 m-auto text-balance z-10  ${isEntered ? 'hidden' : ''}`} >
-
-        <div className="flex flex-col justify-center items-center bg-black/30 p-10 rounded-lg shadow-md  ">
+      <section id="instructions" className={`transition top-0 bottom-0 right-0 left-0 text flex flex-col items-center justify-center align-baseline my-10  p-5 m-auto text-balance z-10  ${isEntered ? 'hidden' : ''}`} >
+        <div className="w-full h-56"> </div>
+        <div className="mt-6 flex flex-col justify-center items-center bg-black/30 p-10 rounded-lg shadow-md  ">
 
           W A S D to move
           <br />
@@ -39,7 +39,7 @@ export default function App ()
         </div>
       </section>
 
-      <Canvas shadows onPointerDown={(e) => e.target.requestPointerLock()} >
+      <Canvas shadows onPointerDown={(e) => e.target.requestPointerLock()} frameloop="demand" >
         <Environment background={true} preset='forest' />
         <Suspense fallback={<Loader />}>
 

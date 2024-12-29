@@ -10,13 +10,14 @@ Title: low poly forest 1
 import { useGLTF } from '@react-three/drei'
 import { useEffect, useRef } from 'react';
 import { useStore } from '../Store';
- 
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { useLoader } from "@react-three/fiber"
 
 export function Map2 (props)
 {
-    const { nodes, materials } = useGLTF('/assets/models/map2.glb')
+    const { nodes, materials } = useLoader(GLTFLoader,'/assets/models/map2.glb')
     const groundRef = useRef()
-    const groundObject = useStore((state) => state.groundObject)
+    
 
     // Add physics ground plane
      

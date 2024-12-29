@@ -8,11 +8,8 @@ export const Game = () =>
 {
     return (
         <RapierPhysics debug >
-
-       
                 <Map1 />
                 <Player   />
-          
             </RapierPhysics>
     )
 }
