@@ -6,7 +6,8 @@ import { RigidBody, CapsuleCollider } from '@react-three/rapier';
 import { useStore } from '../Store';
 import useKeyboard from '../useKeyboard';
 import { degToRad, MathUtils } from 'three/src/math/MathUtils.js';
- 
+import { lerpAngle } from './LerpAngle';
+
 
 // Stable vectors outside component
 const CAMERA_WORLD_POSITION = new Vector3();
@@ -20,30 +21,12 @@ const CONTROLS = {
     ROTATION_SPEED: degToRad(0.5),
 };
 
-const normalizeAngle = (angle) => {
-    while (angle > Math.PI) angle -= 2 * Math.PI;
-    while (angle < -Math.PI) angle += 2 * Math.PI;
-    return angle;
-};
-
-const lerpAngle = (start, end, t) => {
-    start = normalizeAngle(start);
-    end = normalizeAngle(end);
-    
-    if (Math.abs(end - start) > Math.PI) {
-        if (end > start) {
-            start += 2 * Math.PI;
-        } else {
-            end += 2 * Math.PI;
-        }
-    }
-    return normalizeAngle(start + (end - start) * t);
-};
 
 export const Player =  () => {
     const { actions, mixer } = useStore((state)=>state);
+
     const [isCrouch, setIsCrouch] = useState(false);
-    
+
     const refs = {
         rigidBody: useRef(),
         isJumpAction: useRef(false),
@@ -58,7 +41,7 @@ export const Player =  () => {
     };
 
     const keyboard = useKeyboard();
-
+console.log(keyboard);
     // Cleanup function
     useEffect(() => {
         return () => {
@@ -86,69 +69,106 @@ export const Player =  () => {
                 refs.prevActiveAction.current = 0;
             }
         },
-        handleJump: () => {
-            if (!actions) return;
-            refs.isJumpAction.current = true;
-            actions.walk?.fadeOut(0.1);
-            actions.idle?.fadeOut(0.1);
-            actions.jump?.reset().fadeIn(0.1).play();
-            
-            if (refs.animationTimeout.current) {
-                clearTimeout(refs.animationTimeout.current);
-            }
-            
-            refs.animationTimeout.current = setTimeout(() => {
-                actions.idle?.fadeIn(0.2).play();
-            }, 3000);
-        }
+        
     }), [actions]);
 
-    const updatePhysics = useCallback((velocity, inputVelocity) => {
-        if (!refs.rigidBody.current) return;
-        
-        if (inputVelocity.x !== 0 || inputVelocity.z !== 0) {
-            refs.characterRotationTarget.current = Math.atan2(inputVelocity.x, inputVelocity.z);
-            refs.rigidBody.current.setLinvel(
-                {
-                    x: Math.sin(refs.characterRotationTarget.current),
-                    y: inputVelocity.y,
-                    z: Math.cos(refs.characterRotationTarget.current)
-                },
-                true
-            );
-        }
-    }, []);
+    // const updatePhysics = useCallback((velocity, inputVelocity) => {
+    //     if (!refs.rigidBody.current) return;
+
+    //     if (inputVelocity.x !== 0 || inputVelocity.z !== 0) {
+    //         refs.characterRotationTarget.current = Math.atan2(inputVelocity.x, inputVelocity.z);
+    //         refs.rigidBody.current.setLinvel(
+    //             {
+    //                 x: Math.sin(refs.characterRotationTarget.current),
+    //                 y: inputVelocity.y,
+    //                 z: Math.cos(refs.characterRotationTarget.current)
+    //             },
+    //             true
+    //         );
+    //     }
+    // }, []);
 
     useFrame(({ camera }, delta) => {
+
+
+            // console.log('frame');
+            // if(keyboard['KeyW']){
+            //     console.log('walk');
+            //     actions['walk'].reset().fadeIn(.1).play()
+            // }
         if ( refs.rigidBody.current) {
-
-        
-
         const velocity = refs.rigidBody.current.linvel();
         const inputVelocity = { x: 0, z: 0, y: velocity.y };
 
         // Handle movement
-        if (keyboard['KeyW']){ inputVelocity.z = 1; console.log("walk"); }
+        if (keyboard['KeyW']){ inputVelocity.z =1; 
+
+            actions['idle'].fadeOut(0.1)
+            actions['walk'].reset().fadeIn(0.1).play()
+         }
         if (keyboard['KeyS']) inputVelocity.z = -1;
         if (keyboard['KeyA']) inputVelocity.x = 1;
         if (keyboard['KeyD']) inputVelocity.x = -1;
+        if(keyboard['KeyC']){
+            if(isCrouch){
+                console.log('isCrouch',isCrouch);
+                actions['walk'].fadeOut(0.1)
+                actions['idle'].fadeOut(0.1)
+                actions['crouch'].reset().fadeIn(0.1).play()
+            }
+            setIsCrouch((prev)=>!prev)
+            if(!isCrouch){
+                console.log('! isCrouch',isCrouch);
+                actions['crouch'].fadeOut(0.3)
+                actions['idle'].reset().fadeIn(0.2).play()
+            }
 
+            inputVelocity.x=0;
+            inputVelocity.z=0;
+        }
         // Handle animations
-        if (inputVelocity.x !== 0 || inputVelocity.z !== 0) {
+        if (inputVelocity.x !== 0 || inputVelocity.z !== 0 ) {
             animationHandlers.startWalk();
+            
         } else {
-            animationHandlers.startIdle();
+            actions['idle'].reset().play()
+            // animationHandlers.startIdle();
         }
-
+        //running and running jump handling
+        if(keyboard['ShiftLeft'] || keyboard['ShiftRight']  &&keyboard['KeyW'] ){
+            actions['walk'].fadeOut(0.1)
+            actions['run'].reset().fadeIn(0.1).play()
+        }
         // Handle jumping
-        if (keyboard[' '] || keyboard['space'] || keyboard['Space']) {
-            animationHandlers.handleJump();
+        if ( keyboard['Space']) {
+            console.log('jump');
+            actions['walk'].fadeOut(0.1)
+            actions['idle'].fadeOut(0.1)
+            actions['jump'].reset().fadeIn(0.1).play()
+            
             inputVelocity.y = 4;
+            setTimeout(()=>{
+                actions['idle'].reset()?.fadeIn(0.1).play()
+            },2000)
         }
-
         // Update physics
-        updatePhysics(velocity, inputVelocity);
+        
+        if (inputVelocity.x !== 0 || inputVelocity.z !== 0) {
+            refs.characterRotationTarget.current = Math.atan2(inputVelocity.x, inputVelocity.z);
+            inputVelocity.x=Math.sin(refs.characterRotationTarget.current)
+            refs.rigidBody.current.rotation.x=Math.sin(refs.characterRotationTarget.current)
+            inputVelocity.z=Math.cos(refs.characterRotationTarget.current)
+            refs.rigidBody.current.rotation.z=Math.cos(refs.characterRotationTarget.current)
+        }
+        velocity.z=inputVelocity.z
+        velocity.x=inputVelocity.x
+        velocity.y=inputVelocity.y
+        refs.rigidBody.current.setLinvel(velocity,true)
+        refs.rigidBody.current.setRotation(Math.sin(refs.characterRotationTarget.current),0,Math.cos(refs.characterRotationTarget.current))
+
     }
+
+
         // Update character rotation
         if (refs.character.current) {
             refs.character.current.rotation.y = lerpAngle(
@@ -181,7 +201,7 @@ export const Player =  () => {
     });
 
     return (
-        <RigidBody colliders={false} lockRotations ref={refs.rigidBody}>
+        <RigidBody colliders={false} lockRotations ref={refs.rigidBody}   >
             <group ref={refs.container}>
                 <group ref={refs.cameraTarget} position={[0, 0, 1.6]} />
                 <group ref={refs.cameraPosition} position={[0, 0.3, -.9]} />
@@ -193,3 +213,17 @@ export const Player =  () => {
         </RigidBody>
     );
 }
+
+// import {  useFrame } from "@react-three/fiber";
+// import {    useEffect } from "react";
+
+
+// export const Player = () =>
+// {
+//     useFrame((state) => { console.log(`useFrame is running`,state); });
+
+//     useEffect(() => { const handleKeyDown = (event) => { console.log(`Key pressed: ${event.key}`); }; window.addEventListener(`keydown`, handleKeyDown); return () => { window.removeEventListener(`keydown`, handleKeyDown); }; }, []); return (
+//         <mesh> <boxGeometry args={[.5, .5, .5]} /> <meshStandardMaterial color="orange" />
+//          </mesh>
+//     )
+// };

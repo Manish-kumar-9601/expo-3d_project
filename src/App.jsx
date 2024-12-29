@@ -12,7 +12,7 @@ export default function App ()
 
   const canvasProps = useMemo(() => ({
     shadows: true,
-    frameloop: "demand"
+    // frameloop: "demand"
   }), []);
 
   const startGame = () =>
@@ -28,6 +28,9 @@ export default function App ()
       console.error('Pointer Lock API is not supported by this browser.');
     }
   }
+  setTimeout(() => {
+    setIsEntered(true)
+  }, 4000);
   document.addEventListener('click',(e)=>{
  
     e.target.requestPointerLock()
@@ -42,13 +45,13 @@ export default function App ()
   }), []);
 
   const instructionsClass = useMemo(() =>
-    `transition top-0 bottom-0 right-0 left-0 text flex flex-col items-center justify-center align-baseline my-10 p-5 m-auto text-balance z-10 ${isEntered ? 'hidden' : ''}`,
+   
     [isEntered]
   );
 
   return (
     <>
-      <section id="instructions" className={instructionsClass}>
+      <section id="instructions" className={ `transition top-0 bottom-0 right-0 left-0 text flex flex-col items-center justify-center align-baseline my-10 p-5 m-auto text-balance z-10 ${isEntered ? 'hidden' : ''}`}>
         <div className="w-full h-56" />
         <div className="mt-6 flex flex-col justify-center items-center bg-black/30 p-10 rounded-lg shadow-md">
           <p>W A S D to move</p>
