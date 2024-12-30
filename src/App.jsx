@@ -56,6 +56,7 @@ export default function App ()
         <div className="mt-6 flex flex-col justify-center items-center bg-black/30 p-10 rounded-lg shadow-md">
           <p>W A S D to move</p>
           <p>SPACE to jump. C to crouch and Shift + W to run</p>
+          <p>1-6 to Emotes</p>
           <button
             className="bg-white text-black text-center w-40 my-3"
             
