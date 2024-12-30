@@ -27,33 +27,33 @@ export const Character = React.memo((props) =>
     // const idleAnimation = useFBX('/assets/animations/idle.fbx').animations
     // useFBX('/assets/animations/idle.fbx').animations
     const idleAnimation = useGLTF('/assets/animations/idle.glb').animations
-
     idleAnimation[0].name = 'idle';
-
-    console.log(idleAnimation[0]);
     const jumpAnimation = useFBX('/assets/animations/jump.fbx').animations
     jumpAnimation[0].name = 'jump';
     const runningJumpAnimation = useFBX('/assets/animations/runningJump.fbx').animations
     runningJumpAnimation[0].name = 'runningJump';
     const runAnimation = useFBX('/assets/animations/running.fbx').animations
     runAnimation[0].name = 'run';
-    const walkAnimation = useFBX('/assets/animations/walking.fbx').animations
+    const walkAnimation = useFBX('assets/animations/walking .fbx').animations
+
     walkAnimation[0].name = 'walk';
-    const attackAnimation = useFBX('/assets/animations/attack.fbx').animations
+    const attackAnimation = useFBX('/assets/animations/attact.fbx').animations
     attackAnimation[0].name = 'attack';
     const crouchAnimation = useFBX('/assets/animations/crouch.fbx').animations;
     crouchAnimation[0].name = 'crouch';
+
     //Emotes
-    const flairAnimation = useFBX('/assets/animations/flair.fbx').animations;
-    flairAnimation[0].name = 'flair'
-    const houseDancingAnimation = useFBX('/assets/animations/houseDance.fbx').animations;
-    houseDancingAnimation[0].name = 'houseDancing'
-    const breakDance1990Animation = useFBX('/assets/animations/breakDance1990.fbx').animations;
-    breakDance1990Animation[0].name = 'breakDance1990'
+    const breakDanceUprockToGroundAnimation=useFBX('/assets/animations/breakdanceUprockToGround.fbx').animations;
+    breakDanceUprockToGroundAnimation[0].name='breakDanceUprock'
+    const lockingHipHopAnimation=useFBX('/assets/animations/lockingHipHopDance.fbx').animations;
+    lockingHipHopAnimation[0].name='lockingHipHop'
     const gangnamStyleAnimation = useFBX('/assets/animations/gangnamStyle.fbx').animations;
     gangnamStyleAnimation[0].name = ' gangnamStyle'
-    const stylishFlipAnimation = useFBX('/assets/animations/stylishFlip.fbx').animations;
-    stylishFlipAnimation[0].name = 'stylishFlip'
+    const hipHopAnimation = useFBX('/assets/animations/hipHopDancing.fbx').animations;
+    hipHopAnimation[0].name = 'hipHop';
+    const saluteAnimation = useFBX('/assets/animations/salute.fbx').animations;
+    saluteAnimation[0].name = 'salute';
+
     useEffect(() =>
     {
         actions['idle'] = mixer.clipAction(idleAnimation[0], groupRef.current)
@@ -65,21 +65,21 @@ export const Character = React.memo((props) =>
         actions['run'] = mixer.clipAction(runAnimation[0], groupRef.current)
         actions['run'].loop = LoopOnce;
         actions['walk'] = mixer.clipAction(walkAnimation[0], groupRef.current)
-        actions['walk'].loop = LoopOnce;
+        actions['walk'].loop = LoopRepeat;
         actions['attack'] = mixer.clipAction(attackAnimation[0], groupRef.current)
         actions['attack'].loop = LoopOnce;
         actions['crouch'] = mixer.clipAction(crouchAnimation[0], groupRef.current)
         actions['crouch'].loop = LoopRepeat;
-        actions['stylishFlip'] = mixer.clipAction(stylishFlipAnimation[0], groupRef.current);
-        actions['stylishFlip'].loop = LoopOnce;
         actions['gangnamStyle'] = mixer.clipAction(gangnamStyleAnimation[0], groupRef.current);
         actions['gangnamStyle'].loop = LoopOnce;
-        actions['breakDance1990'] = mixer.clipAction(breakDance1990Animation[0], groupRef.current);
-        actions['breakDance1990'].loop = LoopOnce;
-        actions['houseDancing'] = mixer.clipAction(houseDancingAnimation[0], groupRef.current);
-        actions['houseDancing'].loop = LoopOnce;
-        actions['flair'] = mixer.clipAction(flairAnimation[0], groupRef.current);
-        actions['flair'].loop = LoopOnce;
+        actions['salute'] = mixer.clipAction(saluteAnimation[0], groupRef.current);
+        actions['salute'].loop = LoopOnce;
+        actions['hipHop'] = mixer.clipAction(hipHopAnimation[0], groupRef.current);
+        actions['hipHop'].loop = LoopOnce;
+        actions['breakDanceUprock'] = mixer.clipAction(breakDanceUprockToGroundAnimation[0], groupRef.current);
+        actions['breakDanceUprock'].loop = LoopOnce;
+        actions['lockingHipHop'] = mixer.clipAction(lockingHipHopAnimation[0], groupRef.current);
+        actions['lockingHipHop'].loop = LoopOnce;
         actions['idle'].play()
     }, [actions, mixer, idleAnimation, jumpAnimation, runningJumpAnimation, runAnimation, walkAnimation, attackAnimation])
     useFrame((state, delta) => { mixer.update(delta); });
