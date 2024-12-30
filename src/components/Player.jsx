@@ -234,9 +234,9 @@ console.log(keyboard);
         <RigidBody colliders={false} lockRotations ref={refs.rigidBody}   >
             <group ref={refs.container}>
                 <group ref={refs.cameraTarget} position={[0, 0, 1.6]} />
-                <group ref={refs.cameraPosition} position={[0, 0.3, -.9]} />
+                <group ref={refs.cameraPosition} position={[0, 0.3, -1]} />
                 <group ref={refs.character}>
-                    <Character position-y={-0.45}  />
+                    <Character position-y={-0.45} scale={0.6}  />
                 </group>
             </group>
             <CapsuleCollider args={[.38, 0.154]} />

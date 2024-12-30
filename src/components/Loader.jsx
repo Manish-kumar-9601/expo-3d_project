@@ -4,7 +4,6 @@ export const Loader = () =>
 {
     const { progress } = useProgress()
     return <Html center >
-       <p className="flex" >{progress.toPrecision(4)}% loading</p>
-       </Html>
+        <p className="flex" >{progress.toPrecision(4)}% loading</p>
+    </Html>
 }
-   
