@@ -31,10 +31,10 @@ export default function App ()
   setTimeout(() => {
     setIsEntered(true)
   }, 4000);
-  document.addEventListener('click',(e)=>{
+  // document.addEventListener('click',(e)=>{
  
-    e.target.requestPointerLock()
-  })
+  //   e.target.requestPointerLock()
+  // })
   const spotLightProps = useMemo(() => ({
     angle: Math.PI / 3,
     penumbra: 0.5,
@@ -66,12 +66,12 @@ export default function App ()
         </div>
       </section>
  
-      <Canvas {...canvasProps} id="gameCanvas"  shadows onPointerDown={(e) => e.target.requestPointerLock()} >
-        <Environment background preset="forest" />
+      <Canvas {...canvasProps} id="gameCanvas"  shadows   >
+        <Environment background={true} files={'/assets/textures/anime-style-clouds.jpg'} />
         <Suspense fallback={<Loader />}>
-          <spotLight position={[2.5, 5, 5]} {...spotLightProps} />
+          {/* <spotLight position={[2.5, 5, 5]} {...spotLightProps} /> */}
           <spotLight position={[-2.5, 5, 5]} {...spotLightProps} />
-          <ambientLight intensity={0.5} />
+          <ambientLight intensity={1.8} />
           <Game />
           <Stats />
         </Suspense>

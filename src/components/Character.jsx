@@ -14,6 +14,7 @@ export const Character = React.memo((props) =>
     const { nodes, materials } = useLoader(GLTFLoader, '/assets/models/character.glb')
     const groupRef = useRef();
     const { actions, mixer } = useStore((state) => state);
+     
     // working
     // const idleAnimation = useFBX('/assets/animations/idle.fbx');
     // console.log(idleAnimation);
@@ -23,10 +24,11 @@ export const Character = React.memo((props) =>
     // {
     //     actions['idle'].play();
     // })
+    
 
-    // const idleAnimation = useFBX('/assets/animations/idle.fbx').animations
+    const idleAnimation = useFBX('/assets/animations/idle.fbx').animations
     // useFBX('/assets/animations/idle.fbx').animations
-    const idleAnimation = useGLTF('/assets/animations/idle.glb').animations
+    // const idleAnimation = useGLTF('/assets/animations/idle.glb').animations
     idleAnimation[0].name = 'idle';
     const jumpAnimation = useFBX('/assets/animations/jump.fbx').animations
     jumpAnimation[0].name = 'jump';

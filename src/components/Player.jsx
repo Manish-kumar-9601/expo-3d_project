@@ -7,6 +7,8 @@ import { useStore } from '../Store';
 import useKeyboard from '../useKeyboard';
 import { degToRad, MathUtils } from 'three/src/math/MathUtils.js';
 import { lerpAngle } from './LerpAngle';
+import { OrbitControls } from '@react-three/drei';
+import { useControls } from 'leva';
 
 
 // Stable vectors outside component
@@ -15,17 +17,38 @@ const CAMERA_LOOK_AT_WORLD_POSITION = new Vector3();
 const CAMERA_LOOK_AT = new Vector3();
 
 // Constants
-const CONTROLS = {
-    WALK_SPEED: 0.8,
-    RUN_SPEED: 1.6,
-    ROTATION_SPEED: degToRad(0.5),
-};
+// const CONTROLS = {
+//     WALK_SPEED: 0.8,
+//     RUN_SPEED: 1.6,
+//     ROTATION_SPEED: degToRad(0.5),
+// };
 
 
 export const Player = () =>
 {
     const { actions, mixer } = useStore((state) => state);
-
+    const { ROTATION_SPEED, } = useControls("character controls",
+        {
+            WALK_SPEED: {
+                value: 0.8,
+                min: .3,
+                max: 3,
+                step: 1
+            },
+            RUN_SPEED: {
+                value: 1.4,
+                min: 0.8,
+                max: 3,
+                step: 1
+            },
+            ROTATION_SPEED: {
+                value: degToRad(0.2),
+                min: degToRad(0.1),
+                max: degToRad(7),
+                step: degToRad(0.1)
+            }
+        }
+    )
     const [isCrouch, setIsCrouch] = useState(false);
 
     const refs = {
@@ -38,9 +61,10 @@ export const Player = () =>
         character: useRef(),
         characterRotationTarget: useRef(0),
         prevActiveAction: useRef(0),
-        animationTimeout: useRef(null)
+        animationTimeout: useRef(null),
+        isHover: useRef()
     };
-    
+
     const keyboard = useKeyboard();
     console.log(keyboard);
     // Cleanup function
@@ -90,40 +114,22 @@ export const Player = () =>
 
     }), [actions]);
 
-    // const updatePhysics = useCallback((velocity, inputVelocity) => {
-    //     if (!refs.rigidBody.current) return;
 
-    //     if (inputVelocity.x !== 0 || inputVelocity.z !== 0) {
-    //         refs.characterRotationTarget.current = Math.atan2(inputVelocity.x, inputVelocity.z);
-    //         refs.rigidBody.current.setLinvel(
-    //             {
-    //                 x: Math.sin(refs.characterRotationTarget.current),
-    //                 y: inputVelocity.y,
-    //                 z: Math.cos(refs.characterRotationTarget.current)
-    //             },
-    //             true
-    //         );
-    //     }
-    // }, []);
 
-    useFrame(({ camera }, delta) =>
+    useFrame(({ camera, pointer }, delta) =>
     {
 
 
-        // console.log('frame');
-        // if(keyboard['KeyW']){
-        //     console.log('walk');
-        //     actions['walk'].reset().fadeIn(.1).play()
-        // }
+
         if (refs.rigidBody.current)
         {
             const velocity = refs.rigidBody.current.linvel();
             const inputVelocity = { x: 0, z: 0, y: velocity.y };
 
-            if(keyboard['CapsLock']){
+            if (keyboard['CapsLock'])
+            {
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
-                actions['houseDancing'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
@@ -135,13 +141,10 @@ export const Player = () =>
             {
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
-                actions['houseDancing'].fadeOut(0.1)
-                
                 actions['walk'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
-
                 actions['salute'].reset().fadeIn(0.1).play()
             }
 
@@ -150,7 +153,6 @@ export const Player = () =>
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
-                actions['houseDancing'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
@@ -161,13 +163,10 @@ export const Player = () =>
             {
                 actions['hipHop'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
-                actions['houseDancing'].fadeOut(0.1)
-            
                 actions['walk'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
-
                 actions['gangnamStyle'].reset().fadeIn(0.1).play()
             }
             if (keyboard['Digit4'])
@@ -175,8 +174,6 @@ export const Player = () =>
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
-                actions['houseDancing'].fadeOut(0.1)
-                
                 actions['jump'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
@@ -199,21 +196,18 @@ export const Player = () =>
                 actions['hipHop']
                 actions['gangnamStyle']
                 actions['salute'].fadeOut(0.1)
-                
                 actions['jump'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
-
-                actions['houseDancing'].reset().fadeIn(0.1).play()
+                actions['breakDanceUprock'].reset().fadeIn(0.1).play()
             }
             // Handle movement
             if (keyboard['KeyW'])
             {
-                inputVelocity.z = 1;
+                inputVelocity.z += 1;
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
-                actions['houseDancing'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
@@ -222,26 +216,20 @@ export const Player = () =>
             }
             if (keyboard['KeyS'])
             {
-
                 inputVelocity.z = -1;
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
-                actions['houseDancing'].fadeOut(0.1)
-                
                 actions['salute'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
                 animationHandlers.startWalk
-
             }
             if (keyboard['KeyA'])
             {
                 inputVelocity.x = 1;
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
-                actions['houseDancing'].fadeOut(0.1)
-                
                 actions['salute'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
@@ -255,7 +243,6 @@ export const Player = () =>
                 actions['crouch'].fadeOut(0.1)
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
-                actions['houseDancing'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
@@ -270,14 +257,11 @@ export const Player = () =>
                     console.log('isCrouch', isCrouch);
                     actions['hipHop'].fadeOut(0.1)
                     actions['gangnamStyle'].fadeOut(0.1)
-                    actions['houseDancing'].fadeOut(0.1)
-                    
                     actions['salute'].fadeOut(0.1)
                     actions['idle'].fadeOut(0.1)
                     actions['walk'].fadeOut(0.1)
                     actions['idle'].fadeOut(0.1)
                     actions['jump'].fadeOut(0.1)
-
                     actions['crouch'].reset().fadeIn(0.1).play()
                 }
                 setIsCrouch((prev) => !prev)
@@ -296,15 +280,12 @@ export const Player = () =>
             {
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
-                actions['houseDancing'].fadeOut(0.1)
-                
                 actions['salute'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
-
                 actions['attack'].reset().fadeIn(0.1).play()
             }
             if (inputVelocity.x !== 0 || inputVelocity.z !== 0)
@@ -313,7 +294,7 @@ export const Player = () =>
 
             } else
             {
-                
+
                 animationHandlers.startIdle();
             }
             //running and running jump handling
@@ -322,8 +303,6 @@ export const Player = () =>
                 actions['jump'].fadeOut(0.1)
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
-                actions['houseDancing'].fadeOut(0.1)
-                
                 actions['salute'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
@@ -335,14 +314,11 @@ export const Player = () =>
                 console.log('jump');
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
-                actions['houseDancing'].fadeOut(0.1)
-                
                 actions['salute'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['jump'].reset().fadeIn(0.1).play()
-
                 inputVelocity.y = 3;
                 setTimeout(() =>
                 {
@@ -350,27 +326,30 @@ export const Player = () =>
                 }, 2000)
             }
 
-            if( !keyboard['KeyW']|| !keyboard['KeyA']||!keyboard['KeyS'] || !keyboard['KeyD']   ){
+            if (!keyboard['KeyW'] || !keyboard['KeyA'] || !keyboard['KeyS'] || !keyboard['KeyD'])
+            {
                 animationHandlers.startIdle
             }
             // Update physics
-            
+            if (inputVelocity.x !== 0)
+            {
+                refs.rotationTarget.current += ROTATION_SPEED * inputVelocity.x
+            }
             if (inputVelocity.x !== 0 || inputVelocity.z !== 0)
             {
                 refs.characterRotationTarget.current = Math.atan2(inputVelocity.x, inputVelocity.z);
-                inputVelocity.x = Math.sin(refs.characterRotationTarget.current)
-                refs.rigidBody.current.rotation.x = Math.sin(refs.characterRotationTarget.current)
-                inputVelocity.z = Math.cos(refs.characterRotationTarget.current)
-                refs.rigidBody.current.rotation.z = Math.cos(refs.characterRotationTarget.current)
+                // inputVelocity.x = Math.sin(refs.characterRotationTarget.current)
+                // inputVelocity.z = Math.cos(refs.characterRotationTarget.current)
+                velocity.x = Math.sin(refs.characterRotationTarget.current )
+                velocity.z = Math.cos(refs.characterRotationTarget.current  )
             }
-            velocity.z = inputVelocity.z
-            velocity.x = inputVelocity.x
+            // mouse or touch rotation
+
+
             velocity.y = inputVelocity.y
             refs.rigidBody.current.setLinvel(velocity, true)
-            refs.rigidBody.current.setRotation(Math.sin(refs.characterRotationTarget.current), 0, Math.cos(refs.characterRotationTarget.current))
 
         }
-
 
         // Update character rotation
         if (refs.character.current)
@@ -381,6 +360,7 @@ export const Player = () =>
                 0.1
             );
         }
+
 
         // Update camera
         if (refs.container.current && refs.cameraPosition.current && refs.cameraTarget.current)
@@ -406,16 +386,21 @@ export const Player = () =>
     });
 
     return (
-        <RigidBody colliders={false} lockRotations ref={refs.rigidBody}   >
-            <group ref={refs.container}>
-                <group ref={refs.cameraTarget} position={[0, 0, 3]} />
-                <group ref={refs.cameraPosition} position={[0,.7, -1]} />
-                <group ref={refs.character}>
-                    <Character position-y={-0.35} scale={0.6} />
+        <>
+
+
+
+            <RigidBody colliders={false} lockRotations ref={refs.rigidBody}   >
+                <group ref={refs.container}>
+                    <group ref={refs.cameraTarget} position={[0, 0, 5]} />
+                    <group ref={refs.cameraPosition} position={[0, .6, -2]} />
+                    <group ref={refs.character}>
+                        <Character position-y={-0.35} scale={0.6} />
+                    </group>
                 </group>
-            </group>
-            <CapsuleCollider args={[.38, 0.154]} />
-        </RigidBody>
+                <CapsuleCollider args={[.38, 0.154]} />
+            </RigidBody>
+        </>
     );
 }
 
