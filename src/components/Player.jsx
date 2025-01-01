@@ -96,6 +96,14 @@ export const Player = () =>
             if (!actions) return;
             if (refs.prevActiveAction.current !== 1)
             {
+                actions['hipHop'].fadeOut(0.1)
+                actions['salute'].fadeOut(0.1)
+                actions['gangnamStyle'].fadeOut(0.1)
+                actions['salute'].fadeOut(0.1)
+                actions['idle'].fadeOut(0.1)
+                actions['victory'].fadeOut(0.1)
+                actions['jump'].fadeOut(0.1)
+                actions['crouch'].fadeOut(0.1)
                 actions.idle?.fadeOut(0.1);
                 actions.walk?.reset().fadeIn(0.1).play();
                 refs.prevActiveAction.current = 1;
@@ -118,9 +126,6 @@ export const Player = () =>
 
     useFrame(({ camera, pointer }, delta) =>
     {
-
-
-
         if (refs.rigidBody.current)
         {
             const velocity = refs.rigidBody.current.linvel();
@@ -132,6 +137,7 @@ export const Player = () =>
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
+                actions['victory'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
                 animationHandlers.startIdle
@@ -143,6 +149,7 @@ export const Player = () =>
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
+                actions['victory'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
                 actions['salute'].reset().fadeIn(0.1).play()
@@ -153,17 +160,19 @@ export const Player = () =>
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
+                actions['victory'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
-                actions[''].reset().fadeIn(0.1).play()
+                actions['upRock'].reset().fadeIn(0.1).play()
             }
             if (keyboard['Digit3'])
             {
                 actions['hipHop'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
+                actions['victory'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
@@ -175,6 +184,7 @@ export const Player = () =>
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
+                actions['victory'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
@@ -184,7 +194,6 @@ export const Player = () =>
             {
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
-                actions['houseDancing'.fadeOut(0.1)]
                 actions['walk'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
@@ -196,11 +205,23 @@ export const Player = () =>
                 actions['hipHop']
                 actions['gangnamStyle']
                 actions['salute'].fadeOut(0.1)
+                actions['victory'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
                 actions['breakDanceUprock'].reset().fadeIn(0.1).play()
+            } if (keyboard['Digit7'])
+            {
+                actions['hipHop']
+                actions['gangnamStyle']
+                actions['salute'].fadeOut(0.1)
+                actions['jump'].fadeOut(0.1)
+                actions['walk'].fadeOut(0.1)
+                actions['idle'].fadeOut(0.1)
+                actions['crouch'].fadeOut(0.1)
+                actions['breakDanceUprock']
+                actions['victory'].reset().fadeIn(0.1).play()
             }
             // Handle movement
             if (keyboard['KeyW'])
@@ -246,7 +267,6 @@ export const Player = () =>
                 actions['salute'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
-
                 animationHandlers.startWalk
 
             }
@@ -291,10 +311,8 @@ export const Player = () =>
             if (inputVelocity.x !== 0 || inputVelocity.z !== 0)
             {
                 animationHandlers.startWalk();
-
             } else
             {
-
                 animationHandlers.startIdle();
             }
             //running and running jump handling
@@ -340,8 +358,8 @@ export const Player = () =>
                 refs.characterRotationTarget.current = Math.atan2(inputVelocity.x, inputVelocity.z);
                 // inputVelocity.x = Math.sin(refs.characterRotationTarget.current)
                 // inputVelocity.z = Math.cos(refs.characterRotationTarget.current)
-                velocity.x = Math.sin(refs.characterRotationTarget.current )
-                velocity.z = Math.cos(refs.characterRotationTarget.current  )
+                velocity.x = Math.sin(refs.characterRotationTarget.current)
+                velocity.z = Math.cos(refs.characterRotationTarget.current)
             }
             // mouse or touch rotation
 

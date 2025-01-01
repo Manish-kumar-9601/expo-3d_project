@@ -55,6 +55,10 @@ export const Character = React.memo((props) =>
     hipHopAnimation[0].name = 'hipHop';
     const saluteAnimation = useFBX('/assets/animations/salute.fbx').animations;
     saluteAnimation[0].name = 'salute';
+    const  victoryAnimation = useFBX('/assets/animations/victory.fbx').animations;
+    victoryAnimation[0].name = 'victory';
+    const  upRockAnimation = useFBX('/assets/animations/uprock.fbx').animations;
+    upRockAnimation[0].name = 'upRock';
 
     useEffect(() =>
     {
@@ -82,6 +86,10 @@ export const Character = React.memo((props) =>
         actions['breakDanceUprock'].loop = LoopOnce;
         actions['lockingHipHop'] = mixer.clipAction(lockingHipHopAnimation[0], groupRef.current);
         actions['lockingHipHop'].loop = LoopOnce;
+        actions['victory'] = mixer.clipAction(victoryAnimation[0], groupRef.current);
+        actions['victory'].loop = LoopOnce;
+        actions['upRock'] = mixer.clipAction( upRockAnimation[0], groupRef.current);
+        actions['upRock'].loop = LoopOnce;
         actions['idle'].play()
     }, [actions, mixer, idleAnimation, jumpAnimation, runningJumpAnimation, runAnimation, walkAnimation, attackAnimation])
     useFrame((state, delta) => { mixer.update(delta); });
