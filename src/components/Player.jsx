@@ -27,28 +27,13 @@ const CAMERA_LOOK_AT = new Vector3();
 export const Player = () =>
 {
     const { actions, mixer } = useStore((state) => state);
-    const { ROTATION_SPEED, } = useControls("character controls",
+    const { zoom } = useControls("character controls",
         {
-            WALK_SPEED: {
-                value: 0.8,
-                min: .3,
-                max: 3,
-                step: 1
-            },
-            RUN_SPEED: {
-                value: 1.4,
-                min: 0.8,
-                max: 3,
-                step: 1
-            },
-            ROTATION_SPEED: {
-                value: degToRad(0.2),
-                min: degToRad(0.1),
-                max: degToRad(7),
-                step: degToRad(0.1)
-            }
+
+            
         }
     )
+    const ROTATION_SPEED=degToRad(0.2)
     const [isCrouch, setIsCrouch] = useState(false);
 
     const refs = {
@@ -358,13 +343,14 @@ export const Player = () =>
                 refs.characterRotationTarget.current = Math.atan2(inputVelocity.x, inputVelocity.z);
                 // inputVelocity.x = Math.sin(refs.characterRotationTarget.current)
                 // inputVelocity.z = Math.cos(refs.characterRotationTarget.current)
-                velocity.x = Math.sin(refs.characterRotationTarget.current)
-                velocity.z = Math.cos(refs.characterRotationTarget.current)
+                velocity.x = Math.sin( refs.rotationTarget.current+  refs.characterRotationTarget.current) 
+                velocity.z = Math.cos(refs.rotationTarget.current+  refs.characterRotationTarget.current)
             }
             // mouse or touch rotation
 
 
             velocity.y = inputVelocity.y
+
             refs.rigidBody.current.setLinvel(velocity, true)
 
         }
@@ -385,7 +371,7 @@ export const Player = () =>
         {
             refs.container.current.rotation.y = MathUtils.lerp(
                 refs.container.current.rotation.y,
-                refs.rotationTarget.current,
+                refs.rotationTarget.current*7,
                 0.1
             );
 
@@ -393,14 +379,11 @@ export const Player = () =>
             camera.position.lerp(CAMERA_WORLD_POSITION, 0.1);
 
             refs.cameraTarget.current.getWorldPosition(CAMERA_LOOK_AT_WORLD_POSITION);
-            CAMERA_LOOK_AT.lerp(CAMERA_LOOK_AT_WORLD_POSITION, 0.1);
+            CAMERA_LOOK_AT.lerp(CAMERA_LOOK_AT_WORLD_POSITION, 0.3);
             camera.lookAt(CAMERA_LOOK_AT);
         }
 
-        // Update animations
-        // if (mixer) {
-        //     mixer.update(delta);
-        // }
+        
     });
 
     return (
@@ -408,10 +391,10 @@ export const Player = () =>
 
 
 
-            <RigidBody colliders={false} lockRotations ref={refs.rigidBody}   >
+            <RigidBody colliders={false} lockRotations ref={refs.rigidBody}    >
                 <group ref={refs.container}>
                     <group ref={refs.cameraTarget} position={[0, 0, 5]} />
-                    <group ref={refs.cameraPosition} position={[0, .6, -2]} />
+                    <group ref={refs.cameraPosition} position={[0, .6,  -2]} />
                     <group ref={refs.character}>
                         <Character position-y={-0.35} scale={0.6} />
                     </group>

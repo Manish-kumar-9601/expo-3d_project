@@ -7,7 +7,7 @@ import { Physics as RapierPhysics } from '@react-three/rapier';
 export const Game = () =>
 {
     return (
-        <RapierPhysics   >
+        <RapierPhysics    >
                 <Map2 />
                 <Player   />
             </RapierPhysics>

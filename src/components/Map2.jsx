@@ -9,14 +9,13 @@ export const Map2 = React.memo((props) => {
 
     // Modify the material colors and properties
    
-    materials.Material.roughness = 0.4
-    materials.Material.metalness = 1.1
-    materials.Material.envMapIntensity = 1.2
+    materials.Material.roughness = 0.7
+    materials.Material.metalness = 1.0
+    materials.Material.envMapIntensity = 1.0
 
     return (
         <>
-            
-            {/* <ambientLight intensity={0.4} color="#ffffff" /> */}
+           
             <directionalLight
                 position={[10, 10, 5]}
                 intensity={0.8}
