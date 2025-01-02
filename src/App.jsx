@@ -65,7 +65,7 @@ export default function App ()
           </button>
         </div>
       </section>
- 
+ <img src="public/assets/keyboard icons.png" alt="" className="absolute z-10 w-[30rem] bottom-0 mx-auto left-0 right-0 opacity-80" />
       <Canvas {...canvasProps} id="gameCanvas"  shadows   >
         <Environment background={true} files={'/assets/textures/anime-style-clouds.jpg'} />
         <Suspense fallback={<Loader />}>

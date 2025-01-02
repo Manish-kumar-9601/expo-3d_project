@@ -85,6 +85,7 @@ export const Player = () =>
                 actions['salute'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['victory'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
@@ -123,6 +124,7 @@ export const Player = () =>
                 actions['salute'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['victory'].fadeOut(0.1)
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
                 animationHandlers.startIdle
@@ -134,6 +136,7 @@ export const Player = () =>
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['victory'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
@@ -147,6 +150,7 @@ export const Player = () =>
                 actions['salute'].fadeOut(0.1)
                 actions['victory'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
@@ -160,6 +164,7 @@ export const Player = () =>
                 actions['victory'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
                 actions['gangnamStyle'].reset().fadeIn(0.1).play()
             }
@@ -170,6 +175,7 @@ export const Player = () =>
                 actions['salute'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['victory'].fadeOut(0.1)
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
@@ -180,6 +186,7 @@ export const Player = () =>
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
                 actions['walk'].fadeOut(0.1)
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['jump'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
@@ -205,13 +212,14 @@ export const Player = () =>
                 actions['walk'].fadeOut(0.1)
                 actions['idle'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
-                actions['breakDanceUprock']
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['victory'].reset().fadeIn(0.1).play()
             }
             // Handle movement
             if (keyboard['KeyW'])
             {
                 inputVelocity.z += 1;
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
@@ -223,6 +231,7 @@ export const Player = () =>
             if (keyboard['KeyS'])
             {
                 inputVelocity.z = -1;
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
@@ -234,6 +243,7 @@ export const Player = () =>
             if (keyboard['KeyA'])
             {
                 inputVelocity.x = 1;
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
@@ -246,6 +256,7 @@ export const Player = () =>
             if (keyboard['KeyD']) 
             {
                 inputVelocity.x = -1;
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['crouch'].fadeOut(0.1)
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
@@ -260,7 +271,8 @@ export const Player = () =>
                 if (isCrouch)
                 {
                     console.log('isCrouch', isCrouch);
-                    actions['hipHop'].fadeOut(0.1)
+                actions['breakDanceUprock'].fadeOut(0.1)
+                actions['hipHop'].fadeOut(0.1)
                     actions['gangnamStyle'].fadeOut(0.1)
                     actions['salute'].fadeOut(0.1)
                     actions['idle'].fadeOut(0.1)
@@ -273,7 +285,8 @@ export const Player = () =>
                 if (!isCrouch)
                 {
                     console.log('! isCrouch', isCrouch);
-                    actions['crouch'].fadeOut(0.3)
+                actions['breakDanceUprock'].fadeOut(0.1)
+                actions['crouch'].fadeOut(0.3)
                     actions['idle'].reset().fadeIn(0.2).play()
                 }
 
@@ -283,6 +296,7 @@ export const Player = () =>
 
             if (keyboard['KeyE'])
             {
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
@@ -304,6 +318,7 @@ export const Player = () =>
             if (keyboard['ShiftLeft'] || keyboard['ShiftRight'] && keyboard['KeyW'])
             {
                 actions['jump'].fadeOut(0.1)
+                actions['breakDanceUprock'].fadeOut(0.1)
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
                 actions['salute'].fadeOut(0.1)
@@ -314,6 +329,7 @@ export const Player = () =>
             // Handle jumping
             if (keyboard['Space'])
             {
+                actions['breakDanceUprock'].fadeOut(0.1)
                 console.log('jump');
                 actions['hipHop'].fadeOut(0.1)
                 actions['gangnamStyle'].fadeOut(0.1)
